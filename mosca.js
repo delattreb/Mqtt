@@ -1,9 +1,8 @@
 let mysql = require('mysql');
 let mosca = require('mosca');
-const delay = require('delay');
 
 const LOG = true;
-const DELAY = 20000;
+
 let connection;
 
 let settings = {
@@ -30,11 +29,12 @@ handleDisconnect(connection);
 
 function handleDisconnect(client) {
     client.on('error', function () {
-        if (LOG) console.error('> Re-connecting database wait:', DELAY);
-        delay(DELAY);
+        if (LOG) console.error('> Re-connecting database wait:');
         mysqlClient = mysql.createConnection(db_config);
         handleDisconnect(mysqlClient);
-        mysqlClient.connect();
+        mysqlClient.connect(function () {
+            if (LOG) console.log('Database Connected');
+        });
     });
 }
 
