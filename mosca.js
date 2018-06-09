@@ -1,26 +1,42 @@
-mysql = require('mysql');
-mosca = require('mosca');
+let mysql = require('mysql');
+let mosca = require('mosca');
+const delay = require('delay');
 
 const LOG = true;
+const DELAY = 20000;
+let connection;
 
 let settings = {
     port: 1883,
     persistence: mosca.persistence.Memory
 };
 
-let connection = mysql.createConnection({
+let db_config = {
     host: 'mycube.dscloud.me',
     user: 'usermqtt',
     password: 'infected',
     database: 'mqtt',
     port: 3307
-});
+};
 
 // MySQL
-connection.connect(function (err) {
-    if (err) throw err;
-    console.log('Database Connected!');
+connection = mysql.createConnection(db_config);
+
+connection.connect(function () {
+    if (LOG) console.log('Database Connected');
 });
+
+handleDisconnect(connection);
+
+function handleDisconnect(client) {
+    client.on('error', function () {
+        if (LOG) console.error('> Re-connecting database wait:', DELAY);
+        delay(DELAY);
+        mysqlClient = mysql.createConnection(db_config);
+        handleDisconnect(mysqlClient);
+        mysqlClient.connect();
+    });
+}
 
 function insert_message(name, message) {
     let sql = 'INSERT INTO ?? (??, ??, ??) VALUES (?, ?, NOW())';
@@ -54,10 +70,10 @@ server.on('clientDisconnected', function (client) {
 });
 
 function publish(packet, client, cb) {
-    let newPacket = {
+    /*let newPacket = {
         topic: packet.topic,
         payload: packet.payload,
-    };
+    };*/
     if (packet.topic.indexOf('iot:') === 0) {
         let substr = packet.topic.split(':')[1];
         insert_message(substr, packet.payload);
