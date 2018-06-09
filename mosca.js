@@ -1,15 +1,14 @@
-var mosca = require('mosca');
-var mysql = require('mysql');
+mysql = require('mysql');
+mosca = require('mosca');
 
 const LOG = true;
-const INFO = false;
 
-var settings = {
+let settings = {
     port: 1883,
     persistence: mosca.persistence.Memory
 };
 
-var connection = mysql.createConnection({
+let connection = mysql.createConnection({
     host: 'mycube.dscloud.me',
     user: 'usermqtt',
     password: 'infected',
@@ -17,38 +16,51 @@ var connection = mysql.createConnection({
     port: 3307
 });
 
+// MySQL
 connection.connect(function (err) {
     if (err) throw err;
     console.log('Database Connected!');
 });
 
-var server = new mosca.Server(settings, function () {
-    console.log('Mosca server is up and running')
+function insert_message(name, message) {
+    let sql = 'INSERT INTO ?? (??, ??, ??) VALUES (?, ?, NOW())';
+    let params = ['data', 'name', 'value', 'date', name, message];
+    sql = mysql.format(sql, params);
+    connection.query(sql, function (error, results) {
+        if (error) throw error;
+        if (LOG) console.log('Record inserted', results);
+    });
+}
+
+// Start program
+let server = new mosca.Server(settings, function () {
 });
 
-server.published = function (packet, client, cb) {
-    if (packet.topic.indexOf('echo') === 0) {
-        return cb();
-    }
-    if (LOG) console.log('LOG:', packet);
+server.on('ready', function () {
+    console.log('Mosca server is up and running');
+});
+server.on('published', publish);
+server.on('subscribed', function (topic) {
+    if (LOG) console.log('Subscribed', topic);
+});
+server.on('unsubscribed', function (topic) {
+    if (LOG) console.log('Unsubscribed', topic);
+});
+server.on('clientConnected', function (client) {
+    if (LOG) console.log('Client connected', client.id);
+});
+server.on('clientDisconnected', function (client) {
+    if (LOG) console.log('Client disconnected', client.id);
+});
 
-    var newPacket = {
+function publish(packet, client, cb) {
+    let newPacket = {
         topic: packet.topic,
         payload: packet.payload,
     };
     if (packet.topic.indexOf('iot:') === 0) {
-        var substr = packet.topic.split(':')[1];
+        let substr = packet.topic.split(':')[1];
         insert_message(substr, packet.payload);
-        if (INFO) console.log('TOPIC:', newPacket);
+        if (LOG) console.log('publish', client.id, substr);
     }
-};
-
-function insert_message(name, message) {
-    var sql = 'INSERT INTO ?? (??, ??, ??) VALUES (?, ?, NOW())';
-    var params = ['data', 'name', 'value', 'date', name, message];
-    sql = mysql.format(sql, params);
-    connection.query(sql, function (error, results) {
-        if (error) throw error;
-        console.log('1 record inserted');
-    });
 }
