@@ -25,19 +25,6 @@ connection.connect(function () {
     if (LOG) console.log('Database Connected');
 });
 
-handleDisconnect(connection);
-
-function handleDisconnect(client) {
-    client.on('error', function () {
-        if (LOG) console.error('> Re-connecting database wait:');
-        mysqlClient = mysql.createConnection(db_config);
-        handleDisconnect(mysqlClient);
-        mysqlClient.connect(function () {
-            if (LOG) console.log('Database Connected');
-        });
-    });
-}
-
 function insert_message(name, message) {
     let sql = 'INSERT INTO ?? (??, ??, ??) VALUES (?, ?, NOW())';
     let params = ['data', 'name', 'value', 'date', name, message];
