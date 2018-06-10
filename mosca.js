@@ -22,7 +22,7 @@ let db_config = {
 connection = mysql.createConnection(db_config);
 
 connection.connect(function () {
-    if (LOG) console.log('Database Connected');
+    console.log('Database Connected');
 });
 
 function insert_message(name, message) {
