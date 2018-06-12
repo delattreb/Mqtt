@@ -25,6 +25,17 @@ connection.connect(function () {
     console.log('Database Connected');
 });
 
+function updateESP(name, state) {
+    //TODO Check if name has coted around value
+    let sqlESPConnect = 'UPDATE esp SET state=? WHERE name=?';
+    let params = [state, 'ESP Cave'];
+    sqlESPConnect = mysql.format(sqlESPConnect, params);
+    connection.query(sqlESPConnect, function (error, results) {
+        if (error) throw error;
+        if (LOG) console.log('ESP', name, 'updated to:', state);
+    });
+}
+
 function insert_message(name, message) {
     let sql = 'INSERT INTO ?? (??, ??, ??) VALUES (?, ?, NOW())';
     let params = ['data', 'name', 'value', 'date', name, message];
@@ -51,9 +62,11 @@ server.on('unsubscribed', function (topic) {
 });
 server.on('clientConnected', function (client) {
     if (LOG) console.log('Client connected', client.id);
+    updateESP(client.id, true);
 });
 server.on('clientDisconnected', function (client) {
     if (LOG) console.log('Client disconnected', client.id);
+    updateESP(client.id, false);
 });
 
 function publish(packet, client, cb) {
@@ -63,7 +76,7 @@ function publish(packet, client, cb) {
     };*/
     if (packet.topic.indexOf('iot:') === 0) {
         let substr = packet.topic.split(':')[1];
-        insert_message(substr, packet.payload);
+        //insert_message(substr, packet.payload);
         if (LOG) console.log('publish', client.id, substr);
     }
 }
