@@ -26,7 +26,6 @@ connection.connect(function () {
 });
 
 function updateESP(name, state) {
-    //TODO Check if name has coted around value
     let sqlESPConnect = 'UPDATE esp SET state=? WHERE name=?';
     let params = [state, 'ESP Cave'];
     sqlESPConnect = mysql.format(sqlESPConnect, params);

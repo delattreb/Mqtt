@@ -2,6 +2,7 @@
   "name": "Mqtt",
   "version": "0.0.1",
   "dependencies": {
+    "dateformat": "^3.0.3",
     "install": "^0.11.0",
     "mosca": "^2.8.1",
     "mqtt": "^2.18.0",
