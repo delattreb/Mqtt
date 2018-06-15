@@ -25,17 +25,25 @@ connection.connect(function () {
     console.log('Database Connected');
 });
 
-function updateESP(name, state) {
+function updateESPConnected(name, state) {
     let sqlESPConnect = 'UPDATE esp SET connected=? WHERE name=?';
     let params = [state, name];
     sql = mysql.format(sqlESPConnect, params);
-    console.log(sql);
     connection.query(sql, function (error, results) {
         if (error) throw error;
         if (LOG) console.log('ESP', name, 'updated to:', state);
     });
 }
 
+function updateESPState(name, state) {
+    let sqlESPConnect = 'UPDATE esp SET state=? WHERE name=?';
+    let params = [state, name];
+    sql = mysql.format(sqlESPConnect, params);
+    connection.query(sql, function (error, results) {
+        if (error) throw error;
+        if (LOG) console.log('ESP', name, 'updated to:', state);
+    });
+}
 function insert_message(name, message) {
     let sql = 'INSERT INTO ?? (??, ??, ??) VALUES (?, ?, NOW())';
     let params = ['data', 'name', 'value', 'date', name, message];
@@ -62,11 +70,11 @@ server.on('unsubscribed', function (topic) {
 });
 server.on('clientConnected', function (client) {
     if (LOG) console.log('Client connected', client.id);
-    updateESP(client.id, true);
+    updateESPConnected(client.id, true);
 });
 server.on('clientDisconnected', function (client) {
     if (LOG) console.log('Client disconnected', client.id);
-    updateESP(client.id, false);
+    updateESPConnected(client.id, false);
 });
 
 function publish(packet, client, cb) {
