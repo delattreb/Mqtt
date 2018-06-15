@@ -6,7 +6,7 @@ let address = 'mqtt://mycube.dscloud.me';
 let topic_hum = 'iot:h1';
 let topic_ven = 'iot:ventilation';
 let location = 'Cave';
-let LOG = false;
+let LOG = true;
 let INFO = true;
 let threshold = 0;
 let gap = 0;
@@ -44,11 +44,11 @@ let promiseMySQL = new Promise(function (resolve, reject) {
 });
 
 Promise.all([promiseMqtt, promiseMySQL]).then(function (values) {
-        refresh();
+        refreshData();
     }
 );
 
-function refresh() {
+function refreshData() {
     getthreshold();
     getgap();
     if (LOG) {
@@ -61,7 +61,7 @@ function refresh() {
 // MQTT
 //
 clientMqtt.on('message', (topic, message) => {
-    refresh();
+    refreshData();
     if (LOG) {
         console.log('Topic:', topic);
         console.log('Message:', message.toString());
@@ -93,7 +93,7 @@ clientMqtt.on('message', (topic, message) => {
 // MySQL
 //
 function getthreshold() {
-    let sql = 'SELECT threshold FROM regulation WHERE name=?';
+    let sql = 'SELECT threshold FROM regulation WHERE name=? LIMIT 1';
     let params = [location];
     sql = mysql.format(sql, params);
     connection.query(sql, function (error, results) {
@@ -103,7 +103,7 @@ function getthreshold() {
 }
 
 function getgap() {
-    let sql = 'SELECT gap FROM regulation WHERE name=?';
+    let sql = 'SELECT gap FROM regulation WHERE name=? LIMIT 1';
     let params = [location];
     sql = mysql.format(sql, params);
     connection.query(sql, function (error, results) {

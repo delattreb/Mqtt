@@ -4,8 +4,8 @@
   "dependencies": {
     "dateformat": "^3.0.3",
     "install": "^0.11.0",
-    "mosca": "^2.8.1",
-    "mqtt": "^2.18.0",
+    "mosca": "^2.8.2",
+    "mqtt": "^2.18.1",
     "mysql": "^2.15.0",
     "npm": "^6.1.0"
   }
