@@ -98,8 +98,7 @@ function getthreshold() {
     sql = mysql.format(sql, params);
     connection.query(sql, function (error, results) {
         if (error) throw error;
-        if (LOG) console.log('Get threshold:', JSON.stringify(results));
-        threshold = parseFloat(JSON.parse(JSON.stringify(results))[0].threshold);
+        threshold = parseFloat(results[0].threshold);
     });
 }
 
@@ -109,7 +108,6 @@ function getgap() {
     sql = mysql.format(sql, params);
     connection.query(sql, function (error, results) {
         if (error) throw error;
-        if (LOG) console.log('Get gap:', JSON.stringify(results));
-        gap = parseFloat(JSON.parse(JSON.stringify(results))[0].gap);
+        gap = parseFloat(results[0].gap);
     });
 }
