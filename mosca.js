@@ -26,7 +26,7 @@ connection.connect(function () {
 });
 
 function updateESP(name, state) {
-    let sqlESPConnect = 'UPDATE esp SET state=? WHERE name=?';
+    let sqlESPConnect = 'UPDATE esp SET connected=? WHERE name=?';
     let params = [state, "'" + name + "'"];
     console.log(sqlESPConnect);
     sqlESPConnect = mysql.format(sqlESPConnect, params);
