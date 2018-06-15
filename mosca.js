@@ -31,7 +31,7 @@ function updateESPConnected(name, state) {
     sql = mysql.format(sqlESPConnect, params);
     connection.query(sql, function (error, results) {
         if (error) throw error;
-        if (LOG) console.log('ESP', name, 'updated to:', state);
+        if (LOG) console.log(name, 'updated to:', state);
     });
 }
 
@@ -41,9 +41,10 @@ function updateESPState(name, state) {
     sql = mysql.format(sqlESPConnect, params);
     connection.query(sql, function (error, results) {
         if (error) throw error;
-        if (LOG) console.log('ESP', name, 'updated to:', state);
+        if (LOG) console.log(name, 'updated to:', state);
     });
 }
+
 function insert_message(name, message) {
     let sql = 'INSERT INTO ?? (??, ??, ??) VALUES (?, ?, NOW())';
     let params = ['data', 'name', 'value', 'date', name, message];
