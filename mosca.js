@@ -35,16 +35,6 @@ function updateESPConnected(name, state) {
     });
 }
 
-function updateESPState(name, state) {
-    let sqlESPConnect = 'UPDATE esp SET state=? WHERE name=?';
-    let params = [state, name];
-    sql = mysql.format(sqlESPConnect, params);
-    connection.query(sql, function (error, results) {
-        if (error) throw error;
-        if (LOG) console.log(name, 'updated to:', state);
-    });
-}
-
 function insert_message(name, message) {
     let sql = 'INSERT INTO ?? (??, ??, ??) VALUES (?, ?, NOW())';
     let params = ['data', 'name', 'value', 'date', name, message];

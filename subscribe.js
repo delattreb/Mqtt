@@ -74,6 +74,7 @@ clientMqtt.on('message', (topic, message) => {
             console.log('Ventilation On');
         }
         clientMqtt.publish(topic_ven, '1');
+        updateESPState('ESP Cave', 1);
         bthreshold = true;
     } else {
         if (bthreshold) {
@@ -83,6 +84,7 @@ clientMqtt.on('message', (topic, message) => {
             }
             if (hum <= (threshold - gap)) {
                 clientMqtt.publish(topic_ven, '0');
+                updateESPState('ESP Cave', 0);
                 bthreshold = false;
             }
         }
@@ -92,6 +94,17 @@ clientMqtt.on('message', (topic, message) => {
 //
 // MySQL
 //
+
+function updateESPState(name, state) {
+    let sqlESPConnect = 'UPDATE esp SET state=? WHERE name=?';
+    let params = [state, name];
+    sql = mysql.format(sqlESPConnect, params);
+    connection.query(sql, function (error, results) {
+        if (error) throw error;
+        if (LOG) console.log(name, 'updated to:', state);
+    });
+}
+
 function getthreshold() {
     let sql = 'SELECT threshold FROM regulation WHERE name=? LIMIT 1';
     let params = [location];
