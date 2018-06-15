@@ -76,7 +76,7 @@ function publish(packet, client, cb) {
     };*/
     if (packet.topic.indexOf('iot:') === 0) {
         let substr = packet.topic.split(':')[1];
-        //insert_message(substr, packet.payload);
+        insert_message(substr, packet.payload);
         if (LOG) console.log('publish', client.id, substr);
     }
 }
