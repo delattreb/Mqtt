@@ -128,14 +128,3 @@ function getgap() {
         gap = parseFloat(results[0].gap);
     });
 }
-
-//TODO: Replace table regulation with configuration
-//Add table regultation
-/*
-Filed:
-id autoincrement
-tag
-date
-name
-state
- */
