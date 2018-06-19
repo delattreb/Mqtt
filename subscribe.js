@@ -6,6 +6,7 @@ let address = 'mqtt://mycube.dscloud.me';
 let topic_hum = 'iot:h1';
 let topic_ven = 'iot:ventilation';
 let location = 'Cave';
+let ESP_NAME = 'ESP Cave';
 let LOG = true;
 let INFO = true;
 let threshold = 0;
@@ -69,22 +70,16 @@ clientMqtt.on('message', (topic, message) => {
     let hum = parseFloat(message);
     last_hum = hum;
     if (hum >= threshold) {
-        if (INFO) {
-            console.log(dateFormat(Date.now(), "dd-mm-yyyy h:MM:ss"));
-            console.log('Ventilation On');
-        }
         clientMqtt.publish(topic_ven, '1');
-        updateESPState('ESP Cave', 1);
+        updateESPState(ESP_NAME, 1);
+        AddRegulation('Regulation On', dateFormat(Date.now()), ESP_NAME, true);
         bthreshold = true;
     } else {
         if (bthreshold) {
-            if (INFO) {
-                console.log(dateFormat(Date.now(), "dd-mm-yyyy h:MM:ss"));
-                console.log('Ventilation Off');
-            }
             if (hum <= (threshold - gap)) {
                 clientMqtt.publish(topic_ven, '0');
-                updateESPState('ESP Cave', 0);
+                updateESPState(ESP_NAME, 0);
+                AddRegulation('Regulation Off', dateFormat(Date.now()), ESP_NAME, false);
                 bthreshold = false;
             }
         }
@@ -94,7 +89,6 @@ clientMqtt.on('message', (topic, message) => {
 //
 // MySQL
 //
-
 function updateESPState(name, state) {
     let sqlESPConnect = 'UPDATE esp SET state=? WHERE name=?';
     let params = [state, name];
@@ -105,8 +99,18 @@ function updateESPState(name, state) {
     });
 }
 
+function AddRegulation(tag, date, name, state) {
+    let sqlESPConnect = 'INSERT INTO regulation (tag, date, name, state) VALUES (?, ?, ?, ?)';
+    let params = [tag, date, name, state];
+    sql = mysql.format(sqlESPConnect, params);
+    connection.query(sql, function (error, results) {
+        if (error) throw error;
+        if (LOG) console.log(name, 'Insert regulation', state);
+    });
+}
+
 function getthreshold() {
-    let sql = 'SELECT threshold FROM regulation WHERE name=? LIMIT 1';
+    let sql = 'SELECT threshold FROM configuration WHERE name=? LIMIT 1';
     let params = [location];
     sql = mysql.format(sql, params);
     connection.query(sql, function (error, results) {
@@ -116,7 +120,7 @@ function getthreshold() {
 }
 
 function getgap() {
-    let sql = 'SELECT gap FROM regulation WHERE name=? LIMIT 1';
+    let sql = 'SELECT gap FROM configuration WHERE name=? LIMIT 1';
     let params = [location];
     sql = mysql.format(sql, params);
     connection.query(sql, function (error, results) {
@@ -124,3 +128,14 @@ function getgap() {
         gap = parseFloat(results[0].gap);
     });
 }
+
+//TODO: Replace table regulation with configuration
+//Add table regultation
+/*
+Filed:
+id autoincrement
+tag
+date
+name
+state
+ */
