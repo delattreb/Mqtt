@@ -41,7 +41,7 @@ function insert_message(name, message) {
     sql = mysql.format(sql, params);
     connection.query(sql, function (error, results) {
         if (error) throw error;
-        if (LOG) console.log('Record inserted', results);
+        if (LOG) console.log('Record inserted');
     });
 }
 

@@ -6,7 +6,7 @@ let address = 'mqtt://mycube.dscloud.me';
 let topic_hum = 'iot:h1';
 let topic_ven = 'iot:ventilation';
 let location = 'Cave';
-let ESP_NAME = 'ESP Cave';
+let ESP_NAME = 'ESP Extracteur 1';
 let LOG = true;
 let INFO = true;
 let threshold = 0;
@@ -72,14 +72,14 @@ clientMqtt.on('message', (topic, message) => {
     if (hum >= threshold) {
         clientMqtt.publish(topic_ven, '1');
         updateESPState(ESP_NAME, 1);
-        AddRegulation('Regulation On', dateFormat(Date.now()), ESP_NAME, true);
+        AddRegulation('Regulation On', dateFormat(new Date(),"yyyy-mm-dd H:MM:ss"), ESP_NAME, true);
         bthreshold = true;
     } else {
         if (bthreshold) {
             if (hum <= (threshold - gap)) {
                 clientMqtt.publish(topic_ven, '0');
                 updateESPState(ESP_NAME, 0);
-                AddRegulation('Regulation Off', dateFormat(Date.now()), ESP_NAME, false);
+                AddRegulation('Regulation Off', dateFormat(new Date(),"yyyy-mm-dd H:MM:ss"), ESP_NAME, false);
                 bthreshold = false;
             }
         }

@@ -1,0 +1,3 @@
+Mosca server is up and running
+Database Connected
+(node:6773) [DEP0096] DeprecationWarning: timers.unenroll() is deprecated. Please use clearTimeout instead.
