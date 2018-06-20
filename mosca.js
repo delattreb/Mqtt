@@ -36,8 +36,8 @@ function updateESPConnected(name, state) {
 }
 
 function insert_message(name, message) {
-    let sql = 'INSERT INTO ?? (??, ??, ??) VALUES (?, ?, NOW())';
-    let params = ['data', 'name', 'value', 'date', name, message];
+    let sql = 'INSERT INTO data (??, ??, ??) VALUES (?, ?, NOW())';
+    let params = ['name', 'value', 'date', name, message];
     sql = mysql.format(sql, params);
     connection.query(sql, function (error, results) {
         if (error) throw error;
