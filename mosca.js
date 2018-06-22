@@ -86,7 +86,7 @@ function publish(packet, client, cb) {
         let substr = packet.topic.split(':')[1];
         insert_message(substr, packet.payload);
     }
-    if (packet.topic.indexOf('ventilation:') === 0) {
+    if (packet.topic.indexOf('ventilation') === 0) {
         if (INFO) console.log('Ventilation', packet.topic.split(':')[1]);
         let bstate = packet.topic.split(':')[1] !== 0;
         updateESPState('ESP Extracteur 1', bstate);
