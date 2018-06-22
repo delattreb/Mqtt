@@ -70,8 +70,8 @@ server.on('clientDisconnected', function (client) {
 });
 
 function publish(packet, client, cb) {
-    if (INFO) console.log('publish', client.id, packet.topic.split(':')[1]);
     if (packet.topic.indexOf('iot:') === 0) {
+        if (INFO) console.log('publish', client.id, packet.topic.split(':')[1]);
         if (packet.topic.split(':')[1] !== 'ventilation') {
             let substr = packet.topic.split(':')[1];
             insert_message(substr, packet.payload);
