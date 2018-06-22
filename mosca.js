@@ -69,10 +69,11 @@ server.on('clientDisconnected', function (client) {
 });
 
 function publish(packet, client, cb) {
-    if (LOG) console.log('Topic', packet.topic);
     if (packet.topic.indexOf('iot:') === 0) {
-        let substr = packet.topic.split(':')[1];
-        insert_message(substr, packet.payload);
-        if (LOG) console.log('publish', client.id, substr);
+        if (packet.topic.split(':')[1] !== 'ventilation') {
+            let substr = packet.topic.split(':')[1];
+            insert_message(substr, packet.payload);
+            if (LOG) console.log('publish', client.id, substr);
+        }
     }
 }
