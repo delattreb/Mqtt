@@ -87,8 +87,8 @@ function publish(packet, client, cb) {
         insert_message(substr, packet.payload);
     }
     if (packet.topic.indexOf('ventilation') === 0) {
-        if (INFO) console.log('Ventilation', packet.message);
-        let bstate = parseInt(packet.message);
+        if (INFO) console.log('Ventilation', packet.payload);
+        let bstate = parseInt(packet.payload);
         updateESPState('ESP Extracteur 1', bstate);
         updateESPState('ESP Extracteur 2', bstate);
     }
