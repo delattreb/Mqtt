@@ -62,8 +62,6 @@ function refreshData() {
 // MQTT
 //
 clientMqtt.on('message', (topic, message) => {
-    //TODO : Test to to update each ESP State (Ventilation)
-    //TODO : Test topic message to distinguish ventilation & hum
     refreshData();
     if (LOG) {
         console.log('Topic:', topic);

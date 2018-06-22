@@ -80,7 +80,7 @@ server.on('clientDisconnected', function (client) {
 });
 
 function publish(packet, client, cb) {
-    console.log(packet.message);
+    console.log(packet);
     if (packet.topic.indexOf('iot:') === 0) {
         if (INFO) console.log('publish', packet.topic.split(':')[1]);
         let substr = packet.topic.split(':')[1];
