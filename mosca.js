@@ -86,7 +86,7 @@ function publish(packet, client, cb) {
             let substr = packet.topic.split(':')[1];
             insert_message(substr, packet.payload);
         } else {
-            let bstate = packet.topic.split(':')[1];
+            let bstate = packet.topic.split(':')[1] !== 0;
             updateESPState('ESP Extracteur 1', bstate);
             updateESPState('ESP Extracteur 2', bstate);
         }
