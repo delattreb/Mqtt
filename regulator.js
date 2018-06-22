@@ -6,7 +6,7 @@ let address = 'mqtt://mycube.dscloud.me';
 let topic_hum = 'iot:h1';
 let topic_ven = 'iot:ventilation';
 let location = 'Cave';
-let ESP_NAME = 'ESP Extracteur 1'; //TODO replace with the real name of each ESP
+let ESP_NAME = 'ESP Extracteur';
 let LOG = true;
 let INFO = true;
 let threshold = 0;
@@ -73,14 +73,12 @@ clientMqtt.on('message', (topic, message) => {
     last_hum = hum;
     if (hum >= threshold) {
         clientMqtt.publish(topic_ven, '1');
-        updateESPState(ESP_NAME, true);
-        AddRegulation('Regulation On', dateFormat(new Date(),"yyyy-mm-dd H:MM:ss"), ESP_NAME, true);
+          AddRegulation('Regulation On', dateFormat(new Date(),"yyyy-mm-dd H:MM:ss"), ESP_NAME, true);
         bthreshold = true;
     } else {
         if (bthreshold) {
             if (hum <= (threshold - gap)) {
                 clientMqtt.publish(topic_ven, '0');
-                updateESPState(ESP_NAME, false);
                 AddRegulation('Regulation Off', dateFormat(new Date(),"yyyy-mm-dd H:MM:ss"), ESP_NAME, false);
                 bthreshold = false;
             }
@@ -93,16 +91,6 @@ clientMqtt.on('message', (topic, message) => {
 //
 // MySQL
 //
-function updateESPState(name, state) {
-    let sqlESPConnect = 'UPDATE esp SET state=? WHERE name=?';
-    let params = [state, name];
-    sql = mysql.format(sqlESPConnect, params);
-    connection.query(sql, function (error, results) {
-        if (error) throw error;
-        if (LOG) console.log(name, 'updated to:', state);
-    });
-}
-
 function AddRegulation(tag, date, name, state) {
     let sqlESPConnect = 'INSERT INTO regulation (tag, date, name, state) VALUES (?, ?, ?, ?)';
     let params = [tag, date, name, state];

@@ -36,6 +36,16 @@ function updateESPConnected(name, state) {
     });
 }
 
+function updateESPState(name, state) {
+    let sqlESPConnect = 'UPDATE esp SET state=? WHERE name=?';
+    let params = [state, name];
+    sql = mysql.format(sqlESPConnect, params);
+    connection.query(sql, function (error, results) {
+        if (error) throw error;
+        if (LOG) console.log(name, 'updated to:', state);
+    });
+}
+
 function insert_message(name, message) {
     let sql = 'INSERT INTO data (??, ??, ??) VALUES (?, ?, NOW())';
     let params = ['name', 'value', 'date', name, message];
@@ -75,6 +85,10 @@ function publish(packet, client, cb) {
         if (packet.topic.split(':')[1] !== 'ventilation') {
             let substr = packet.topic.split(':')[1];
             insert_message(substr, packet.payload);
+        } else {
+            let bstate = packet.topic.split(':')[1];
+            updateESPState('ESP Extracteur 1', bstate);
+            updateESPState('ESP Extracteur 2', bstate);
         }
     }
 }
