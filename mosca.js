@@ -93,7 +93,7 @@ function publish(packet, client, cb) {
                 bstate = true;
             updateESPState('ESP Extracteur 1', bstate);
             updateESPState('ESP Extracteur 2', bstate);
-            if (INFO) console.log('Ventilation', bstate);
+            if (INFO) console.log('Ventilation', packet.topic.split(':')[1]);
         }
     }
 }
