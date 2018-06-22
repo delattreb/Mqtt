@@ -69,10 +69,7 @@ server.on('clientDisconnected', function (client) {
 });
 
 function publish(packet, client, cb) {
-    /*let newPacket = {
-        topic: packet.topic,
-        payload: packet.payload,
-    };*/
+    if (LOG) console.log('Topic', packet.topic);
     if (packet.topic.indexOf('iot:') === 0) {
         let substr = packet.topic.split(':')[1];
         insert_message(substr, packet.payload);
