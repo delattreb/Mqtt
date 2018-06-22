@@ -89,6 +89,7 @@ function publish(packet, client, cb) {
             let bstate = packet.topic.split(':')[1] !== 0;
             updateESPState('ESP Extracteur 1', bstate);
             updateESPState('ESP Extracteur 2', bstate);
+            if (INFO) console.log('Ventilation',bstate);
         }
     }
 }
