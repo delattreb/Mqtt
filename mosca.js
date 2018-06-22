@@ -80,14 +80,13 @@ server.on('clientDisconnected', function (client) {
 });
 
 function publish(packet, client, cb) {
-    console.log(packet);
     if (packet.topic.indexOf('iot:') === 0) {
         if (INFO) console.log('publish', packet.topic.split(':')[1]);
         let substr = packet.topic.split(':')[1];
         insert_message(substr, packet.payload);
     }
     if (packet.topic.indexOf('ventilation') === 0) {
-        if (INFO) console.log('Ventilation', packet.payload);
+        if (INFO) console.log('Ventilation', packet.payload.toString());
         let bstate = parseInt(packet.payload);
         updateESPState('ESP Extracteur 1', bstate);
         updateESPState('ESP Extracteur 2', bstate);
