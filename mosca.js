@@ -86,10 +86,14 @@ function publish(packet, client, cb) {
             let substr = packet.topic.split(':')[1];
             insert_message(substr, packet.payload);
         } else {
-            let bstate = packet.topic.split(':')[1] !== 0;
+            let bstate;
+            if (packet.topic.split(':')[1] === 0)
+                bstate = false;
+            else
+                bstate = true;
             updateESPState('ESP Extracteur 1', bstate);
             updateESPState('ESP Extracteur 2', bstate);
-            if (INFO) console.log('Ventilation',bstate);
+            if (INFO) console.log('Ventilation', bstate);
         }
     }
 }
