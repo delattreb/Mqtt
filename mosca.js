@@ -1,7 +1,7 @@
 let mysql = require('mysql');
 let mosca = require('mosca');
 
-const LOG = true;
+const LOG = false;
 const INFO = true;
 
 let connection;
