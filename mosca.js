@@ -2,6 +2,7 @@ let mysql = require('mysql');
 let mosca = require('mosca');
 
 const LOG = true;
+const INFO = true;
 
 let connection;
 
@@ -31,7 +32,7 @@ function updateESPConnected(name, state) {
     sql = mysql.format(sqlESPConnect, params);
     connection.query(sql, function (error, results) {
         if (error) throw error;
-        if (LOG) console.log(name, 'updated to:', state);
+        if (INFO) console.log(name, 'updated to:', state);
     });
 }
 
@@ -54,26 +55,26 @@ server.on('ready', function () {
 });
 server.on('published', publish);
 server.on('subscribed', function (topic) {
-    if (LOG) console.log('Subscribed', topic);
+    if (INFO) console.log('Subscribed', topic);
 });
 server.on('unsubscribed', function (topic) {
-    if (LOG) console.log('Unsubscribed', topic);
+    if (INFO) console.log('Unsubscribed', topic);
 });
 server.on('clientConnected', function (client) {
-    if (LOG) console.log('Client connected', client.id);
+    if (INFO) console.log('Client connected', client.id);
     updateESPConnected(client.id, true);
 });
 server.on('clientDisconnected', function (client) {
-    if (LOG) console.log('Client disconnected', client.id);
+    if (INFO) console.log('Client disconnected', client.id);
     updateESPConnected(client.id, false);
 });
 
 function publish(packet, client, cb) {
+    if (INFO) console.log('publish', client.id, packet.topic.split(':')[1]);
     if (packet.topic.indexOf('iot:') === 0) {
         if (packet.topic.split(':')[1] !== 'ventilation') {
             let substr = packet.topic.split(':')[1];
             insert_message(substr, packet.payload);
-            if (LOG) console.log('publish', client.id, substr);
         }
     }
 }
