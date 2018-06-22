@@ -4,7 +4,7 @@ let dateFormat = require('dateformat');
 
 let address = 'mqtt://mycube.dscloud.me';
 let topic_hum = 'iot:h1';
-let topic_ven = 'iot:ventilation';
+let topic_ven = 'ventilation';
 let location = 'Cave';
 let ESP_NAME = 'ESP Extracteur';
 let LOG = true;
