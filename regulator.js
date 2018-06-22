@@ -9,7 +9,7 @@ let location = 'Cave';
 let ESP_NAME = 'ESP Extracteur';
 let LOG = true;
 let INFO = true;
-let threshold = 0;
+let threshold = 100;
 let gap = 0;
 let last_hum = 0;
 let bthreshold = false;
@@ -45,8 +45,10 @@ let promiseMySQL = new Promise(function (resolve, reject) {
 });
 
 Promise.all([promiseMqtt, promiseMySQL]).then(function (values) {
+        refreshData();
     }
 );
+
 // --------------------------------------------------------------------------------------------------------------------
 
 function refreshData() {
@@ -67,17 +69,17 @@ clientMqtt.on('message', (topic, message) => {
         console.log('Topic:', topic);
         console.log('Message:', message.toString());
     }
-    let hum = parseFloat(message);
+    let hum = parseFloat(message.toString());
     last_hum = hum;
     if (hum >= threshold) {
         clientMqtt.publish(topic_ven, '1');
-          AddRegulation('Regulation On', dateFormat(new Date(),"yyyy-mm-dd H:MM:ss"), ESP_NAME, true);
+        AddRegulation('Regulation On', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), ESP_NAME, true);
         bthreshold = true;
     } else {
         if (bthreshold) {
             if (hum <= (threshold - gap)) {
                 clientMqtt.publish(topic_ven, '0');
-                AddRegulation('Regulation Off', dateFormat(new Date(),"yyyy-mm-dd H:MM:ss"), ESP_NAME, false);
+                AddRegulation('Regulation Off', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), ESP_NAME, false);
                 bthreshold = false;
             }
         }
@@ -118,4 +120,5 @@ function getgap() {
         gap = parseFloat(results[0].gap);
     });
 }
+
 //--------------------------------------------------------------------------------------------------------------------
