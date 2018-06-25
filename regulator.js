@@ -5,6 +5,7 @@ let dateFormat = require('dateformat');
 let address = 'mqtt://mycube.dscloud.me';
 let topic_hum = 'iot:h1';
 let topic_ven = 'ventilation';
+let topic_ven_force = 'ventilation_force';
 let location = 'Cave';
 let ESP_NAME = 'ESP Extracteur';
 let LOG = true;
@@ -13,6 +14,7 @@ let threshold = 100;
 let gap = 0;
 let last_hum = 0;
 let bthreshold = false;
+let bventilation_force = false;
 
 let db_config = {
     host: 'mycube.dscloud.me',
@@ -31,6 +33,7 @@ connection = mysql.createConnection(db_config);
 //
 let promiseMqtt = new Promise(function (resolve, reject) {
     clientMqtt.subscribe(topic_hum);
+    clientMqtt.subscribe(topic_ven_force);
     clientMqtt.on('connect', function () {
         console.log('Connected to:', address);
         resolve();
@@ -69,20 +72,38 @@ clientMqtt.on('message', (topic, message) => {
         console.log('Topic:', topic);
         console.log('Message:', message.toString());
     }
-    let hum = parseFloat(message.toString());
-    last_hum = hum;
-    if (hum >= threshold) {
-        clientMqtt.publish(topic_ven, '1');
-        AddRegulation('Regulation On', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), ESP_NAME, true);
-        bthreshold = true;
-    } else {
-        if (bthreshold) {
-            if (hum <= (threshold - gap)) {
-                clientMqtt.publish(topic_ven, '0');
-                AddRegulation('Regulation Off', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), ESP_NAME, false);
-                bthreshold = false;
+    if (bventilation_force === false) {
+        if (topic.indexOf('iot:') === 0) {
+            let hum = parseFloat(message.toString());
+            last_hum = hum;
+            if (hum >= threshold) {
+                clientMqtt.publish(topic_ven, '1');
+                AddRegulation('Regulation On', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), ESP_NAME, true);
+                bthreshold = true;
+            } else {
+                if (bthreshold) {
+                    if (hum <= (threshold - gap)) {
+                        clientMqtt.publish(topic_ven, '0');
+                        AddRegulation('Regulation Off', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), ESP_NAME, false);
+                        bthreshold = false;
+                    }
+                }
             }
         }
+    }
+    if (topic.indexOf(topic_ven_force) === 0) {
+        let state = parseFloat(message.toString());
+        if (state === 0) {
+            clientMqtt.publish(topic_ven, '0');
+            AddRegulation('Regulation Off', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), ESP_NAME, false);
+            bventilation_force = false;
+        }
+        else {
+            clientMqtt.publish(topic_ven, '1');
+            AddRegulation('Regulation On', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), ESP_NAME, true);
+            bventilation_force = true;
+        }
+
     }
 });
 //---------------------------------------------------------------------------------------------------------------------

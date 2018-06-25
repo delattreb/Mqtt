@@ -1,5 +1,5 @@
 let mysql = require('mysql');
-let mosca = require('mosca');
+let server = require('mosca');
 
 const LOG = false;
 const INFO = true;
@@ -8,7 +8,7 @@ let connection;
 
 let settings = {
     port: 1883,
-    persistence: mosca.persistence.Memory
+    persistence: server.persistence.Memory
 };
 
 let db_config = {
@@ -57,7 +57,7 @@ function insert_message(name, message) {
 }
 
 // Start program
-let server = new mosca.Server(settings, function () {
+server = new server.Server(settings, function () {
 });
 
 server.on('ready', function () {
