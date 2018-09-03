@@ -78,7 +78,8 @@ clientMqtt.on('message', (topic, message) => {
             last_hum = hum;
             if (hum >= threshold) {
                 clientMqtt.publish(topic_ven, '1');
-                AddRegulation('Regulation On', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), ESP_NAME, true);
+                if(!bthreshold)
+                    AddRegulation('Regulation On', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), ESP_NAME, true);
                 bthreshold = true;
             } else {
                 if (bthreshold) {
