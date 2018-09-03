@@ -1,3 +1,64 @@
+internal/modules/cjs/loader.js:596
+    throw err;
+    ^
+
+Error: Cannot find module '/home/dietpi/mqtt/mosca.js'
+    at Function.Module._resolveFilename (internal/modules/cjs/loader.js:594:15)
+    at Function.Module._load (internal/modules/cjs/loader.js:520:25)
+    at Function.Module.runMain (internal/modules/cjs/loader.js:744:10)
+    at startup (internal/bootstrap/node.js:238:19)
+    at bootstrapNodeJSCore (internal/bootstrap/node.js:572:3)
+Connected to: mqtt://mycube.dscloud.me
+Database Connected
+(node:2133) [DEP0096] DeprecationWarning: timers.unenroll() is deprecated. Please use clearTimeout instead.
+/home/dietpi/mqtt/regulator.js:130
+        if (error) throw error;
+                   ^
+
+Error: read ECONNRESET
+    at TCP.onread (net.js:657:25)
+    --------------------
+    at Protocol._enqueue (/home/dietpi/mqtt/node_modules/mysql/lib/protocol/Protocol.js:145:48)
+    at Connection.query (/home/dietpi/mqtt/node_modules/mysql/lib/Connection.js:208:25)
+    at getthreshold (/home/dietpi/mqtt/regulator.js:129:16)
+    at refreshData (/home/dietpi/mqtt/regulator.js:58:5)
+    at MqttClient.clientMqtt.on (/home/dietpi/mqtt/regulator.js:70:5)
+    at MqttClient.emit (events.js:182:13)
+    at MqttClient._handlePublish (/home/dietpi/mqtt/node_modules/mqtt/lib/client.js:956:12)
+    at MqttClient._handlePacket (/home/dietpi/mqtt/node_modules/mqtt/lib/client.js:315:12)
+    at work (/home/dietpi/mqtt/node_modules/mqtt/lib/client.js:271:12)
+    at Writable.writable._write (/home/dietpi/mqtt/node_modules/mqtt/lib/client.js:281:5)
 Mosca server is up and running
 Database Connected
-(node:9318) [DEP0096] DeprecationWarning: timers.unenroll() is deprecated. Please use clearTimeout instead.
+Client connected ESP Chambre
+Client connected ESP Ch Chloe
+Client connected ESP Cave
+ESP Chambre updated to: true
+ESP Ch Chloe updated to: true
+ESP Cave updated to: true
+publish t2
+Record inserted
+publish h2
+Record inserted
+publish t3
+Record inserted
+publish h3
+Record inserted
+publish t1
+Record inserted
+publish h1
+Record inserted
+internal/modules/cjs/loader.js:596
+    throw err;
+    ^
+
+Error: Cannot find module '/home/dietpi/mqtt/mosca.js'
+    at Function.Module._resolveFilename (internal/modules/cjs/loader.js:594:15)
+    at Function.Module._load (internal/modules/cjs/loader.js:520:25)
+    at Function.Module.runMain (internal/modules/cjs/loader.js:744:10)
+    at startup (internal/bootstrap/node.js:238:19)
+    at bootstrapNodeJSCore (internal/bootstrap/node.js:572:3)
+Database Connected
+Mosca server is up and running
+Database Connected
+Connected to: mqtt://mycube.dscloud.me

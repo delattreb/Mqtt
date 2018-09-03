@@ -1,4 +1,9 @@
-#!/bin/bash
-nohup node mosca.js & --no-deprecation --no-warnings
+#!/bin/sh
+nohup node mosca.js &
+nohup node regulator.js &
+cd /home/dietpi/docker/
+sudo ./up.sh
+
+
 
 
