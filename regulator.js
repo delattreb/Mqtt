@@ -68,9 +68,9 @@ function refreshData() {
 //
 clientMqtt.on('message', (topic, message) => {
     refreshData();
-    if (LOG) {
-        console.log('Topic:', topic);
-        console.log('Message:', message.toString());
+    if (INFO) {
+        console.log('Message from ',topic,' ',dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"));
+        console.log('Msg:', message.toString());
     }
     if (bventilation_force === false) {
         if (topic.indexOf('iot:') === 0) {
