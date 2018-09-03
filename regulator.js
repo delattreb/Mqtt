@@ -48,8 +48,8 @@ let promiseMySQL = new Promise(function (resolve, reject) {
 });
 
 Promise.all([promiseMqtt, promiseMySQL]).then(function (values) {
-        refreshData();
-    }
+    refreshData();
+}
 );
 
 // --------------------------------------------------------------------------------------------------------------------
@@ -69,7 +69,7 @@ function refreshData() {
 clientMqtt.on('message', (topic, message) => {
     refreshData();
     if (INFO) {
-        console.log('Message from ',topic,' ',dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"));
+        console.log('Message from ', topic, dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"));
         console.log('Msg:', message.toString());
     }
     if (bventilation_force === false) {
