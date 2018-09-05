@@ -1,11 +1,10 @@
 let mysql = require('mysql');
 let server = require('mosca');
+let dateFormat = require('dateformat');
+let log = require('loglevel');
 
-const LOG = false;
-const INFO = false;
-
+let loglevel = log.levels.DEBUG;
 let connection;
-
 let settings = {
     port: 1883,
     persistence: server.persistence.Memory
@@ -18,12 +17,13 @@ let db_config = {
     database: 'mqtt',
     port: 3307
 };
+log.setDefaultLevel(loglevel);
 
 // MySQL
 connection = mysql.createConnection(db_config);
 
 connection.connect(function () {
-    console.log('Database Connected');
+    log.info(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'Database Connected');
 });
 
 function updateESPConnected(name, state) {
@@ -32,7 +32,7 @@ function updateESPConnected(name, state) {
     sql = mysql.format(sqlESPConnect, params);
     connection.query(sql, function (error, results) {
         if (error) throw error;
-        if (INFO) console.log(name, 'updated to:', state);
+        log.debug(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), name, 'updated to:', state);
     });
 }
 
@@ -42,7 +42,7 @@ function updateESPState(name, state) {
     sql = mysql.format(sqlESPConnect, params);
     connection.query(sql, function (error, results) {
         if (error) throw error;
-        if (LOG) console.log(name, 'updated to:', state);
+        log.debug(name, 'updated to:', state);
     });
 }
 
@@ -52,7 +52,7 @@ function insert_message(name, message) {
     sql = mysql.format(sql, params);
     connection.query(sql, function (error, results) {
         if (error) throw error;
-        if (LOG) console.log('Record inserted');
+        log.debug(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'Record inserted');
     });
 }
 
@@ -61,32 +61,32 @@ server = new server.Server(settings, function () {
 });
 
 server.on('ready', function () {
-    console.log('Mosca server is up and running');
+    log.info(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'Mosca server is up and running');
 });
 server.on('published', publish);
 server.on('subscribed', function (topic) {
-    if (INFO) console.log('Subscribed', topic);
+    log.info(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'Subscribed', topic);
 });
 server.on('unsubscribed', function (topic) {
-    if (INFO) console.log('Unsubscribed', topic);
+    log.info(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'Unsubscribed', topic);
 });
 server.on('clientConnected', function (client) {
-    if (INFO) console.log('Client connected', client.id);
+    log.info(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'Client connected', client.id);
     updateESPConnected(client.id, true);
 });
 server.on('clientDisconnected', function (client) {
-    if (INFO) console.log('Client disconnected', client.id);
+    log.info(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'Client disconnected', client.id);
     updateESPConnected(client.id, false);
 });
 
 function publish(packet, client, cb) {
     if (packet.topic.indexOf('iot:') === 0) {
-        if (INFO) console.log('publish', packet.topic.split(':')[1]);
+        log.info(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'publish', packet.topic.split(':')[1]);
         let substr = packet.topic.split(':')[1];
         insert_message(substr, packet.payload);
     }
     if (packet.topic.indexOf('ventilation') === 0) {
-        if (INFO) console.log('Ventilation', packet.payload.toString());
+        log.deug(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'Ventilation', packet.payload.toString());
         let bstate = parseInt(packet.payload);
         updateESPState('ESP Extracteur 1', bstate);
         updateESPState('ESP Extracteur 2', bstate);
