@@ -1,15 +1,15 @@
 let mqtt = require('mqtt');
 let mysql = require('mysql');
 let dateFormat = require('dateformat');
+let log = require('loglevel');
 
+let loglevel = log.levels.INFO;
 let address = 'mqtt://mycube.dscloud.me';
 let topic_hum = 'iot:h1';
 let topic_ven = 'ventilation';
 let topic_ven_force = 'ventilation_force';
 let location = 'Cave';
 let ESP_NAME = 'ESP Extracteur';
-let LOG = false;
-let INFO = false;
 let threshold = 100;
 let gap = 0;
 let last_hum = 0;
@@ -24,6 +24,7 @@ let db_config = {
     port: 3307
 };
 
+log.setDefaultLevel(loglevel);
 let clientMqtt = mqtt.connect(address);
 let connection;
 connection = mysql.createConnection(db_config);
@@ -35,14 +36,14 @@ let promiseMqtt = new Promise(function (resolve, reject) {
     clientMqtt.subscribe(topic_hum);
     clientMqtt.subscribe(topic_ven_force);
     clientMqtt.on('connect', function () {
-        console.log('Connected to:', address);
+        log.info(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'Connected to:', address);
         resolve();
     });
 });
 
 let promiseMySQL = new Promise(function (resolve, reject) {
     connection.connect(function () {
-        console.log('Database Connected');
+        log.info(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'Database Connected');
         resolve();
     });
 });
@@ -53,14 +54,11 @@ Promise.all([promiseMqtt, promiseMySQL]).then(function (values) {
 );
 
 // --------------------------------------------------------------------------------------------------------------------
-
 function refreshData() {
     getthreshold();
     getgap();
-    if (LOG) {
-        console.log('Threshold:', threshold);
-        console.log('Gap:', gap);
-    }
+    log.debug(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'Threshold:', threshold);
+    log.debug(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'Gap:', gap);
 }
 
 //
@@ -68,10 +66,8 @@ function refreshData() {
 //
 clientMqtt.on('message', (topic, message) => {
     refreshData();
-    if (INFO) {
-        console.log('Message from:', topic, dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"));
-        console.log('Msg:', message.toString());
-    }
+    log.debug(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'Message from:', topic);
+    log.debug(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'Msg:', message.toString());
     if (bventilation_force === false) {
         if (topic.indexOf('iot:') === 0) {
             let hum = parseFloat(message.toString());
@@ -119,7 +115,7 @@ function AddRegulation(tag, date, name, state) {
     sql = mysql.format(sqlESPConnect, params);
     connection.query(sql, function (error, results) {
         if (error) throw error;
-        if (LOG) console.log(name, 'Insert regulation', state);
+        log.debug(name, 'Insert regulation', state);
     });
 }
 
