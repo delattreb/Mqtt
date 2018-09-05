@@ -3,7 +3,7 @@ let server = require('mosca');
 let dateFormat = require('dateformat');
 let log = require('loglevel');
 
-let loglevel = log.levels.DEBUG;
+let loglevel = log.levels.INFO;
 let connection;
 let settings = {
     port: 1883,
