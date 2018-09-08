@@ -100,7 +100,6 @@ clientMqtt.on('message', (topic, message) => {
             AddRegulation('Regulation On', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), ESP_NAME, true);
             bventilation_force = true;
         }
-
     }
 });
 //---------------------------------------------------------------------------------------------------------------------
