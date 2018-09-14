@@ -86,7 +86,7 @@ function publish(packet, client, cb) {
         insert_message(substr, packet.payload);
     }
     if (packet.topic.indexOf('ventilation') === 0) {
-        log.deug(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'Ventilation', packet.payload.toString());
+        log.debug(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'Ventilation', packet.payload.toString());
         let bstate = parseInt(packet.payload);
         updateESPState('ESP Extracteur 1', bstate);
         updateESPState('ESP Extracteur 2', bstate);
