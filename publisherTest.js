@@ -1,14 +1,19 @@
-
 let mqtt = require('mqtt');
-let client = mqtt.connect('mqtt://192.169.1.46');
+let env = require('./env');
 
-client.on('connect', function () {
-    console.log('Message Sent');
-    client.publish('ventilation', '0');
-});
+var options = {
+    port: 1884,
+    //host: 'mqtt://mycube.dscloud.me',
+    clientId: 'Mytest'
+    //keepalive: 60,
+    //reconnectPeriod: 1000,
+    //protocolId: 'MQIsdp',
+    //protocolVersion: 3,
+    //clean: true,
+    //encoding: 'utf8'
+};
 
+let clientMqtt = mqtt.connect(env.address, options);
 
-
-//let logger = require('./Logger');
-//logger.loginfo('INFO', 'test', 'WTF');
-
+clientMqtt.publish(env.topic_ven, '0');
+console.log('send message');
