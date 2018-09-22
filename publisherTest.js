@@ -3,8 +3,8 @@ let env = require('./env');
 
 var options = {
     port: 1884,
-    //host: 'mqtt://mycube.dscloud.me',
-    clientId: 'Mytest'
+    host: env.address,
+    clientId: 'testPublisherJS'
     //keepalive: 60,
     //reconnectPeriod: 1000,
     //protocolId: 'MQIsdp',
