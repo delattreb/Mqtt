@@ -21,8 +21,7 @@ module.exports = {
         port: 1883,
         persistence: server.persistence.Memory
     },
-
-    // regulation configuration
+      // regulation configuration
     address: 'mqtt://mycube.dscloud.me',
     topic_hum: 'iot:h1',
     topic_ven: 'ventilation',

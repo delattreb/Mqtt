@@ -20,6 +20,7 @@ var options = {
     //clean: true,
     //encoding: 'utf8'
 };
+
 log.setDefaultLevel(env.loglevel);
 let connection;
 
