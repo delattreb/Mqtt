@@ -3,12 +3,13 @@ let mosca = require('mosca');
 let dateFormat = require('dateformat');
 let log = require('loglevel');
 let env = require('./env');
+let credential = require('./credentials');
 let connection;
 
 log.setDefaultLevel(env.loglevel);
 
 // MySQL
-connection = mysql.createConnection(env.db);
+connection = mysql.createConnection(credential.db);
 
 connection.connect(function () {
     log.info(dateFormat(new Date(), env.date_format), 'Database Connected');

@@ -3,6 +3,7 @@ let mysql = require('mysql');
 let dateFormat = require('dateformat');
 let log = require('loglevel');
 let env = require('./env');
+let credential = require('./credentials');
 
 let threshold = 100;
 let gap = 0;
@@ -24,8 +25,8 @@ var options = {
 log.setDefaultLevel(env.loglevel);
 let connection;
 
-let clientMqtt = mqtt.connect(env.address, options);
-connection = mysql.createConnection(env.db);
+let clientMqtt = mqtt.connect(credential.address, options);
+connection = mysql.createConnection(credential.db);
 
 //
 // Connection
@@ -34,7 +35,7 @@ let promiseMqtt = new Promise(function (resolve, reject) {
     clientMqtt.subscribe(env.topic_hum);
     clientMqtt.subscribe(env.topic_ven_force);
     clientMqtt.on('connect', function () {
-        log.info(dateFormat(new Date(), env.date_format), 'Connected to:', env.address);
+        log.info(dateFormat(new Date(), env.date_format), 'Connected to:', credential.address);
         resolve();
     });
 });
@@ -64,7 +65,7 @@ function refreshData() {
 //
 clientMqtt.on('message', (topic, message) => {
     refreshData();
-    log.info(dateFormat(new Date(), env.date_format), 'Message from:', topic);
+    log.debug(dateFormat(new Date(), env.date_format), 'Message from:', topic);
     log.debug(dateFormat(new Date(), env.date_format), 'Msg:', message.toString());
     if (bventilation_force === false) {
         if (topic.indexOf('iot:') === 0) {

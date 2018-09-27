@@ -6,6 +6,4 @@ regulator.log
 regulator_err.log
 server.log
 server_err.log
-
-
-
+credentials.js
