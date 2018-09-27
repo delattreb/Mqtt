@@ -11,7 +11,7 @@ log.setDefaultLevel(env.loglevel);
 connection = mysql.createConnection(env.db);
 
 connection.connect(function () {
-    log.info(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'Database Connected');
+    log.info(dateFormat(new Date(), env.date_format), 'Database Connected');
 });
 
 function updateESPConnected(name, state) {
@@ -36,7 +36,7 @@ function procsql(reqsql, params) {
     connection.query(sql, function (error, results) {
         if (error)
             throw error;
-        log.debug(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), results);
+        log.debug(dateFormat(new Date(), env.date_format), results);
     });
 }
 // Start program
@@ -44,31 +44,31 @@ server = new server.Server(env.mosca, function () {
 });
 
 server.on('ready', function () {
-    log.info(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'Mosca server is up and running');
+    log.info(dateFormat(new Date(), env.date_format), 'Mosca server is up and running');
 });
-server.on('subscribed', function (topic) {
-    log.info(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'Subscribed', topic);
+server.on('subscribed', function (topic, client) {
+    log.info(dateFormat(new Date(), env.date_format), 'Subscribed', client.id, topic);
 });
-server.on('unsubscribed', function (topic) {
-    log.info(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'Unsubscribed', topic);
+server.on('unsubscribed', function (topic, client) {
+    log.info(dateFormat(new Date(), env.date_format), 'Unsubscribed', client.id, topic);
 });
 server.on('clientConnected', function (client) {
-    log.info(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'Client connected', client.id);
+    log.info(dateFormat(new Date(), env.date_format), 'Connected', client.id);
     updateESPConnected(client.id, true);
 });
 server.on('clientDisconnected', function (client) {
-    log.info(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'Client disconnected', client.id);
+    log.info(dateFormat(new Date(), env.date_format), 'Disconnected', client.id);
     updateESPConnected(client.id, false);
 });
 server.on('published', publish);
 function publish(packet, client, cb) {
     if (packet.topic.indexOf('iot:') === 0) {
-        log.info(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'client', client.id, 'pub', packet.topic.split(':')[1], 'value', packet.payload.toString());
+        log.debug(dateFormat(new Date(), env.date_format), 'client', client.id, 'pub', packet.topic.split(':')[1], 'value', packet.payload.toString());
         let substr = packet.topic.split(':')[1];
         insert_message(substr, packet.payload);
     }
     if (packet.topic.indexOf('ventilation') === 0) {
-        log.debug(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'client', client.id, 'ventilation', packet.payload.toString());
+        log.debug(dateFormat(new Date(), env.date_format), 'client', client.id, 'ventilation', packet.payload.toString());
         let bstate = parseInt(packet.payload);
         updateESPState('ESP Extracteur 1', bstate);
         updateESPState('ESP Extracteur 2', bstate);

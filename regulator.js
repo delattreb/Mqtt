@@ -34,14 +34,14 @@ let promiseMqtt = new Promise(function (resolve, reject) {
     clientMqtt.subscribe(env.topic_hum);
     clientMqtt.subscribe(env.topic_ven_force);
     clientMqtt.on('connect', function () {
-        log.info(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'Connected to:', env.address);
+        log.info(dateFormat(new Date(), env.date_format), 'Connected to:', env.address);
         resolve();
     });
 });
 
 let promiseMySQL = new Promise(function (resolve, reject) {
     connection.connect(function () {
-        log.info(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'Database Connected');
+        log.info(dateFormat(new Date(), env.date_format), 'Database Connected');
         resolve();
     });
 });
@@ -55,8 +55,8 @@ Promise.all([promiseMqtt, promiseMySQL]).then(function (values) {
 function refreshData() {
     getthreshold();
     getgap();
-    log.debug(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'Threshold:', threshold);
-    log.debug(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'Gap:', gap);
+    log.debug(dateFormat(new Date(), env.date_format), 'Threshold:', threshold);
+    log.debug(dateFormat(new Date(), env.date_format), 'Gap:', gap);
 }
 
 //
@@ -64,8 +64,8 @@ function refreshData() {
 //
 clientMqtt.on('message', (topic, message) => {
     refreshData();
-    log.debug(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'Message from:', topic);
-    log.debug(dateFormat(new Date(), "dd/mm/yyyy H:MM:ss"), 'Msg:', message.toString());
+    log.info(dateFormat(new Date(), env.date_format), 'Message from:', topic);
+    log.debug(dateFormat(new Date(), env.date_format), 'Msg:', message.toString());
     if (bventilation_force === false) {
         if (topic.indexOf('iot:') === 0) {
             let hum = parseFloat(message.toString());
@@ -74,12 +74,14 @@ clientMqtt.on('message', (topic, message) => {
                 clientMqtt.publish(env.topic_ven, '1');
                 if (!bthreshold)
                     AddRegulation('Regulation On', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), env.ESP_NAME, true);
+                    log.info(dateFormat(new Date(), env.date_format), 'Regulation On');
                 bthreshold = true;
             } else {
                 if (bthreshold) {
                     if (hum <= (threshold - gap)) {
                         clientMqtt.publish(env.topic_ven, '0');
                         AddRegulation('Regulation Off', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), env.ESP_NAME, false);
+                        log.info(dateFormat(new Date(), env.date_format), 'Regulation Off');
                         bthreshold = false;
                     }
                 }
@@ -91,11 +93,13 @@ clientMqtt.on('message', (topic, message) => {
         if (state === 0) {
             clientMqtt.publish(env.topic_ven, '0');
             AddRegulation('Regulation Off', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), env.ESP_NAME, false);
+            log.info(dateFormat(new Date(), env.date_format), 'Regulation force Off');
             bventilation_force = false;
         }
         else {
             clientMqtt.publish(env.topic_ven, '1');
             AddRegulation('Regulation On', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), env.ESP_NAME, true);
+            log.info(dateFormat(new Date(), env.date_format), 'Regulation force On');
             bventilation_force = true;
         }
     }

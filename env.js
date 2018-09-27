@@ -5,7 +5,7 @@ let server = require('mosca');
 
 module.exports = {
     // Log Level Configuration
-    loglevel: log.levels.DEBUG,
+    loglevel: log.levels.INFO,
 
     //Database configuration
     db: {
@@ -27,5 +27,6 @@ module.exports = {
     topic_ven: 'ventilation',
     topic_ven_force: 'ventilation_force',
     location: 'Cave',
-    ESP_NAME: 'ESP Extracteur'
+    ESP_NAME: 'ESP Extracteur',
+    date_format: "dd/mm/yyyy H:MM:ss"
 }
