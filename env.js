@@ -28,5 +28,6 @@ module.exports = {
     topic_ven_force: 'ventilation_force',
     location: 'Cave',
     ESP_NAME: 'ESP Extracteur',
-    date_format: "dd/mm/yyyy H:MM:ss"
+    date_format: "dd/mm/yyyy H:MM:ss",
+    mysql_date: "yyyy-mm-dd H:MM:ss"
 }

@@ -1,5 +1,5 @@
 let mysql = require('mysql');
-let server = require('mosca');
+let mosca = require('mosca');
 let dateFormat = require('dateformat');
 let log = require('loglevel');
 let env = require('./env');
@@ -40,27 +40,27 @@ function procsql(reqsql, params) {
     });
 }
 // Start program
-server = new server.Server(env.mosca, function () {
+mosca = new mosca.Server(env.mosca, function () {
 });
 
-server.on('ready', function () {
+mosca.on('ready', function () {
     log.info(dateFormat(new Date(), env.date_format), 'Mosca server is up and running');
 });
-server.on('subscribed', function (topic, client) {
+mosca.on('subscribed', function (topic, client) {
     log.info(dateFormat(new Date(), env.date_format), 'Subscribed', client.id, topic);
 });
-server.on('unsubscribed', function (topic, client) {
+mosca.on('unsubscribed', function (topic, client) {
     log.info(dateFormat(new Date(), env.date_format), 'Unsubscribed', client.id, topic);
 });
-server.on('clientConnected', function (client) {
+mosca.on('clientConnected', function (client) {
     log.info(dateFormat(new Date(), env.date_format), 'Connected', client.id);
     updateESPConnected(client.id, true);
 });
-server.on('clientDisconnected', function (client) {
+mosca.on('clientDisconnected', function (client) {
     log.info(dateFormat(new Date(), env.date_format), 'Disconnected', client.id);
     updateESPConnected(client.id, false);
 });
-server.on('published', publish);
+mosca.on('published', publish);
 function publish(packet, client, cb) {
     if (packet.topic.indexOf('iot:') === 0) {
         log.debug(dateFormat(new Date(), env.date_format), 'client', client.id, 'pub', packet.topic.split(':')[1], 'value', packet.payload.toString());
