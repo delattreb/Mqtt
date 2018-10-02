@@ -116,7 +116,10 @@ function AddRegulation(tag, date, name, state) {
     let params = [tag, date, name, state];
     sql = mysql.format(sqlESPConnect, params);
     connection.query(sql, function (error, results) {
-        if (error) throw error;
+        if (error) {
+            //throw error;
+            log.error(dateFormat(new Date(), env.date_format), error.message);
+        }
         log.debug(name, 'Insert regulation', state);
     });
 }
@@ -126,7 +129,10 @@ function getthreshold() {
     let params = [env.location];
     sql = mysql.format(sql, params);
     connection.query(sql, function (error, results) {
-        if (error) throw error;
+        if (error) {
+            //throw error;
+            log.error(dateFormat(new Date(), env.date_format), error.message);
+        }
         threshold = parseFloat(results[0].threshold);
     });
 }
@@ -136,7 +142,10 @@ function getgap() {
     let params = [env.location];
     sql = mysql.format(sql, params);
     connection.query(sql, function (error, results) {
-        if (error) throw error;
+        if (error) {
+            //throw error;
+            log.error(dateFormat(new Date(), env.date_format), error.message);
+        }
         gap = parseFloat(results[0].gap);
     });
 }
