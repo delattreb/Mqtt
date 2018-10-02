@@ -32,12 +32,13 @@ function insert_message(name, message) {
     let params = ['name', 'value', 'date', name, message];
     procsql(reqsql, params);
 }
+
 function procsql(reqsql, params) {
     sql = mysql.format(reqsql, params);
     connection.query(sql, function (error, results) {
         if (error) {
             //throw error;
-            log.error(dateFormat(new Date(), env.date_format), error.message);
+            log.error(dateFormat(new Date(), env.date_format), 'MySQL connection error');
         }
         log.debug(dateFormat(new Date(), env.date_format), results);
     });

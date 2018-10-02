@@ -114,39 +114,30 @@ clientMqtt.on('message', (topic, message) => {
 function AddRegulation(tag, date, name, state) {
     let sqlESPConnect = 'INSERT INTO regulation (tag, date, name, state) VALUES (?, ?, ?, ?)';
     let params = [tag, date, name, state];
-    sql = mysql.format(sqlESPConnect, params);
-    connection.query(sql, function (error, results) {
-        if (error) {
-            //throw error;
-            log.error(dateFormat(new Date(), env.date_format), error.message);
-        }
-        log.debug(name, 'Insert regulation', state);
-    });
+    procsql(sqlESPConnect, params);
+    log.info(name, 'Insert regulation', state);
 }
 
 function getthreshold() {
     let sql = 'SELECT threshold FROM configuration WHERE name=? LIMIT 1';
     let params = [env.location];
-    sql = mysql.format(sql, params);
-    connection.query(sql, function (error, results) {
-        if (error) {
-            //throw error;
-            log.error(dateFormat(new Date(), env.date_format), error.message);
-        }
-        threshold = parseFloat(results[0].threshold);
-    });
+    threshold = procsql(sql, params);
 }
 
 function getgap() {
     let sql = 'SELECT gap FROM configuration WHERE name=? LIMIT 1';
     let params = [env.location];
-    sql = mysql.format(sql, params);
+    gap = procsql(sql, params);
+}
+
+function procsql(reqsql, params) {
+    sql = mysql.format(reqsql, params);
     connection.query(sql, function (error, results) {
         if (error) {
-            //throw error;
-            log.error(dateFormat(new Date(), env.date_format), error.message);
+            log.error(dateFormat(new Date(), env.date_format), 'MySQL connection error');
         }
-        gap = parseFloat(results[0].gap);
+        log.debug(dateFormat(new Date(), env.date_format), results);
+        return parseFloat(results[0].gap);
     });
 }
 
