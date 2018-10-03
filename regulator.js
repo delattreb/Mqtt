@@ -11,15 +11,17 @@ let last_hum = 0;
 let bthreshold = false;
 let bventilation_force = false;
 var options = {
-    port: 1883,
+    port: env.mosca.port,
     //host: 'mqtt://mycube.dscloud.me',
-    clientId: 'Regulator'
+    clientId: 'Regulator',
     //keepalive: 60,
     //reconnectPeriod: 1000,
     //protocolId: 'MQIsdp',
     //protocolVersion: 3,
     //clean: true,
-    //encoding: 'utf8'
+    //encoding: 'utf8',
+    username: env.username,
+    password: env.password
 };
 
 log.setDefaultLevel(env.loglevel);
