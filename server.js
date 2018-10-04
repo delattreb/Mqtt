@@ -50,7 +50,7 @@ mosca = new mosca.Server(env.mosca, function () {
 mosca.on('ready', function () {
     log.info(dateFormat(new Date(), env.date_format), 'Mosca server is up and running');
     server.authenticate = function (client, username, password, callback) {
-        callback(null, (username === env.username && password.toString('ascii') === env.password));
+        callback(null, (username === credential.username && password.toString('ascii') === credential.password));
         };
 });
 mosca.on('subscribed', function (topic, client) {

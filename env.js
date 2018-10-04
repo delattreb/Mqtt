@@ -6,12 +6,10 @@ let server = require('mosca');
 module.exports = {
     // Log Level Configuration
     loglevel: log.levels.INFO,
-    username: '1',
-    password: '2',
 
     // Mosca Server configuration
     mosca: {
-        port: 1883,
+        port: 1884,
         persistence: server.persistence.Memory
     },
     // regulation configuration

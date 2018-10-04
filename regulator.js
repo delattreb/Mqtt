@@ -20,8 +20,8 @@ var options = {
     //protocolVersion: 3,
     //clean: true,
     //encoding: 'utf8',
-    username: env.username,
-    password: env.password
+    username: credential.username,
+    password: credential.password
 };
 
 log.setDefaultLevel(env.loglevel);
