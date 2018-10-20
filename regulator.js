@@ -127,8 +127,8 @@ function procsql(reqsql, params) {
     connection.query(sql, function (error, results) {
         if (error) {
             log.error(dateFormat(new Date(), env.date_format), 'MySQL connection error')
+            throw error
         }
-        //log.debug(dateFormat(new Date(), env.date_format), results)
         return parseFloat(results[0].gap)
     })
 }
