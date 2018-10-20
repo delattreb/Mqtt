@@ -2,9 +2,9 @@ let mqtt = require('mqtt');
 let env = require('./env');
 
 var options = {
-    port: 1884,
+    port: 1883,
     //host: 'mqtt://mycube.dscloud.me',
-    clientId: 'Mytest'
+    clientId: 'Test'
     //keepalive: 60,
     //reconnectPeriod: 1000,
     //protocolId: 'MQIsdp',
@@ -15,5 +15,5 @@ var options = {
 
 let clientMqtt = mqtt.connect(env.address, options);
 
-clientMqtt.publish(env.topic_ven, '0');
+clientMqtt.publish(env.topic_ven, '1');
 console.log('send message');
