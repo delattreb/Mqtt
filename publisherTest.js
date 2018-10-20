@@ -8,5 +8,5 @@ var options = {
 }
 
 let clientMqtt = mqtt.connect(credential.address, options)
-clientMqtt.publish(env.topic_ven,  JSON.stringify({ value: '1' }))
+clientMqtt.publish(env.topic_ven, JSON.stringify({ value: '1' }))
 console.log('send message')
