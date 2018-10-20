@@ -15,5 +15,5 @@ var options = {
 
 let clientMqtt = mqtt.connect(env.address, options);
 
-clientMqtt.publish(env.topic_ven, '1');
+clientMqtt.publish(env.topic_ven, '0');
 console.log('send message');

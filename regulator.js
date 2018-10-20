@@ -60,7 +60,7 @@ clientMqtt.on('message', (topic, message) => {
     refreshData();
     log.debug(dateFormat(new Date(), env.date_format), 'Message from:', topic);
     log.debug(dateFormat(new Date(), env.date_format), 'Msg:', message.toString());
-    if (bventilation_force === false) {
+    //if (bventilation_force === false) {
         if (topic.indexOf('iot:') === 0) {
             let hum = parseFloat(message.toString());
             last_hum = hum;
@@ -81,7 +81,8 @@ clientMqtt.on('message', (topic, message) => {
                 }
             }
         }
-    }
+    //}
+    /*
     if (topic.indexOf(env.topic_ven_force) === 0) {
         let state = parseFloat(message.toString());
         if (state === 0) {
@@ -96,7 +97,7 @@ clientMqtt.on('message', (topic, message) => {
             log.info(dateFormat(new Date(), env.date_format), 'Regulation force On');
             bventilation_force = true;
         }
-    }
+    }*/
 });
 //---------------------------------------------------------------------------------------------------------------------
 

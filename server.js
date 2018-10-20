@@ -40,7 +40,7 @@ function procsql(reqsql, params) {
             //throw error;
             log.error(dateFormat(new Date(), env.date_format), 'MySQL connection error');
         }
-        log.debug(dateFormat(new Date(), env.date_format), results);
+        //log.debug(dateFormat(new Date(), env.date_format), results);
     });
 }
 // Start program
