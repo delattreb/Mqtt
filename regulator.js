@@ -62,7 +62,7 @@ clientMqtt.on('message', (topic, message) => {
         if (topic.indexOf(env.topic_hum) === 0) {
             let hum = parseFloat(message.toString())
             last_hum = hum
-            log.info(dateFormat(new Date(), env.date_format), 'Topic', env.topic_hum, 'Humidity', hum)
+            log.debug(dateFormat(new Date(), env.date_format), 'Topic', env.topic_hum, 'Humidity', hum)
             if (hum >= threshold) {
                 clientMqtt.publish(env.topic_ven, JSON.stringify({ value: '1' }))
                 if (!bthreshold)
