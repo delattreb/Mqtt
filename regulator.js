@@ -58,47 +58,44 @@ function refreshData() {
 //
 clientMqtt.on('message', (topic, message) => {
     refreshData()
-    log.debug(dateFormat(new Date(), env.date_format), 'Message from:', topic)
-    log.debug(dateFormat(new Date(), env.date_format), 'Msg:', message.toString())
-    //if (bventilation_force === false) {
-    if (topic.indexOf(env.topic_hum) === 0) {
-        let hum = parseFloat(message.toString())
-        last_hum = hum
-        log.info(dateFormat(new Date(), env.date_format), 'Topic', env.topic_hum, 'Humidity', hum)
-        if (hum >= threshold) {
-            clientMqtt.publish(env.topic_ven, JSON.stringify({ value: '1' }))
-            if (!bthreshold)
-                AddRegulation('Regulation On', dateFormat(new Date(), mysql_date), env.ESP_NAME, true)
-            log.info(dateFormat(new Date(), env.date_format), 'Regulation On')
-            bthreshold = true
-        } else {
-            if (bthreshold) {
-                if (hum <= (threshold - gap)) {
-                    clientMqtt.publish(env.topic_ven, JSON.stringify({ value: '0' }))
-                    AddRegulation('Regulation Off', dateFormat(new Date(), mysql_date), env.ESP_NAME, false)
-                    log.info(dateFormat(new Date(), env.date_format), 'Regulation Off')
-                    bthreshold = false
+    if (bventilation_force === false) {
+        if (topic.indexOf(env.topic_hum) === 0) {
+            let hum = parseFloat(message.toString())
+            last_hum = hum
+            log.info(dateFormat(new Date(), env.date_format), 'Topic', env.topic_hum, 'Humidity', hum)
+            if (hum >= threshold) {
+                clientMqtt.publish(env.topic_ven, JSON.stringify({ value: '1' }))
+                if (!bthreshold)
+                    AddRegulation('Regulation On', dateFormat(new Date(), mysql_date), env.ESP_NAME, true)
+                log.info(dateFormat(new Date(), env.date_format), 'Regulation On')
+                bthreshold = true
+            } else {
+                if (bthreshold) {
+                    if (hum <= (threshold - gap)) {
+                        clientMqtt.publish(env.topic_ven, JSON.stringify({ value: '0' }))
+                        AddRegulation('Regulation Off', dateFormat(new Date(), mysql_date), env.ESP_NAME, false)
+                        log.info(dateFormat(new Date(), env.date_format), 'Regulation Off')
+                        bthreshold = false
+                    }
                 }
             }
         }
     }
-    //}
-    /*
     if (topic.indexOf(env.topic_ven_force) === 0) {
-        let state = parseFloat(message.toString()) 
+        let state = parseFloat(message.toString())
         if (state === 0) {
-            clientMqtt.publish(env.topic_ven,  JSON.stringify({ value: '0' })) 
-            AddRegulation('Regulation Off', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), env.ESP_NAME, false) 
-            log.info(dateFormat(new Date(), env.date_format), 'Regulation force Off') 
-            bventilation_force = false 
+            clientMqtt.publish(env.topic_ven, JSON.stringify({ value: '0' }))
+            AddRegulation('Regulation Off', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), env.ESP_NAME, false)
+            log.info(dateFormat(new Date(), env.date_format), 'Regulation force Off')
+            bventilation_force = false
         }
         else {
-            clientMqtt.publish(env.topic_ven,  JSON.stringify({ value: '1' })) 
-            AddRegulation('Regulation On', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), env.ESP_NAME, true) 
-            log.info(dateFormat(new Date(), env.date_format), 'Regulation force On') 
-            bventilation_force = true 
+            clientMqtt.publish(env.topic_ven, JSON.stringify({ value: '1' }))
+            AddRegulation('Regulation On', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), env.ESP_NAME, true)
+            log.info(dateFormat(new Date(), env.date_format), 'Regulation force On')
+            bventilation_force = true
         }
-    }*/
+    }
 })
 //---------------------------------------------------------------------------------------------------------------------
 
