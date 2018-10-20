@@ -72,8 +72,8 @@ function publish(packet, client, cb) {
         insert_message(substr, packet.payload);
     }
     if (packet.topic.indexOf(env.topic_ven) === 0) {
-        log.debug(dateFormat(new Date(), env.date_format), 'client', client.id, 'Set topic', env.topic_ven, 'To', packet.payload.toString());
-        let bstate = parseInt(packet.payload);
+        log.debug(dateFormat(new Date(), env.date_format), 'client', client.id, 'Set topic', env.topic_ven, 'To', JSON.parse(packet.payload).value);
+        let bstate = parseInt(JSON.parse(packet.payload).jacket);
         updateESPState('ESP Extracteur 1', bstate);
         updateESPState('ESP Extracteur 2', bstate);
     }
