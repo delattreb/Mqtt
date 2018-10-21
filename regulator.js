@@ -115,22 +115,25 @@ function getthreshold() {
     let sql = 'SELECT threshold FROM configuration WHERE name=? LIMIT 1'
     let params = [env.location]
     threshold = procsql(sql, params)
+    connection.query(sql, function (error, results) {
+        if (error) {
+            log.error(dateFormat(new Date(), env.date_format), 'MySQL connection error')
+            throw error
+        }
+        threshold = parseFloat(results[0].threshold)
+    })
 }
 
 function getgap() {
     let sql = 'SELECT gap FROM configuration WHERE name=? LIMIT 1'
     let params = [env.location]
-    gap = procsql(sql, params)
-}
-
-function procsql(reqsql, params) {
     sql = mysql.format(reqsql, params)
     connection.query(sql, function (error, results) {
         if (error) {
             log.error(dateFormat(new Date(), env.date_format), 'MySQL connection error')
             throw error
         }
-        return parseFloat(results[0].gap)
+        gap = parseFloat(results[0].gap)
     })
 }
 
