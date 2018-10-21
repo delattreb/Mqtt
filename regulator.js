@@ -105,16 +105,22 @@ clientMqtt.on('message', (topic, message) => {
 // MySQL
 //
 function AddRegulation(tag, date, name, state) {
-    let sqlESPConnect = 'INSERT INTO regulation (tag, date, name, state) VALUES (?, ?, ?, ?)'
+    let reqsql = 'INSERT INTO regulation (tag, date, name, state) VALUES (?, ?, ?, ?)'
     let params = [tag, date, name, state]
-    procsql(sqlESPConnect, params)
+    sql = mysql.format(reqsql, params)
+    connection.query(sql, function (error, results) {
+        if (error) {
+            log.error(dateFormat(new Date(), env.date_format), 'MySQL connection error')
+            throw error
+        }
+    })
     log.info(name, 'Insert regulation', state)
 }
 
 function getthreshold() {
-    let sql = 'SELECT threshold FROM configuration WHERE name=? LIMIT 1'
+    let reqsql = 'SELECT threshold FROM configuration WHERE name=? LIMIT 1'
     let params = [env.location]
-    threshold = procsql(sql, params)
+    sql = mysql.format(reqsql, params)
     connection.query(sql, function (error, results) {
         if (error) {
             log.error(dateFormat(new Date(), env.date_format), 'MySQL connection error')
@@ -125,7 +131,7 @@ function getthreshold() {
 }
 
 function getgap() {
-    let sql = 'SELECT gap FROM configuration WHERE name=? LIMIT 1'
+    let reqsql = 'SELECT gap FROM configuration WHERE name=? LIMIT 1'
     let params = [env.location]
     sql = mysql.format(reqsql, params)
     connection.query(sql, function (error, results) {
