@@ -67,14 +67,14 @@ clientMqtt.on('message', (topic, message) => {
             if (hum >= threshold) {
                 clientMqtt.publish(env.topic_ven, JSON.stringify({ value: '1' }))
                 if (!bthreshold)
-                    AddRegulation('Regulation On', dateFormat(new Date(), mysql_date), env.ESP_NAME, true)
+                    AddRegulation('Regulation On', dateFormat(new Date(), env.mysql_date), env.ESP_NAME, true)
                 log.info(dateFormat(new Date(), env.date_format), 'Regulation On')
                 bthreshold = true
             } else {
                 if (bthreshold) {
                     if (hum <= (threshold - gap)) {
                         clientMqtt.publish(env.topic_ven, JSON.stringify({ value: '0' }))
-                        AddRegulation('Regulation Off', dateFormat(new Date(), mysql_date), env.ESP_NAME, false)
+                        AddRegulation('Regulation Off', dateFormat(new Date(), env.mysql_date), env.ESP_NAME, false)
                         log.info(dateFormat(new Date(), env.date_format), 'Regulation Off')
                         bthreshold = false
                     }
