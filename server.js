@@ -72,7 +72,7 @@ function publish(packet, client, cb) {
     }
     if (packet.topic.indexOf(env.topic_ven) === 0) {
         log.debug(dateFormat(new Date(), env.date_format), 'client', client.id, 'Set topic', env.topic_ven, 'To', JSON.parse(packet.payload).value)
-        let bstate = parseInt(JSON.parse(packet.payload).jacket)
+        let bstate = parseInt(JSON.parse(packet.payload).value)
         updateESPState('ESP Ventilation 1', bstate)
         updateESPState('ESP Ventilation 2', bstate)
     }
