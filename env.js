@@ -1,4 +1,3 @@
-
 // Configuration file
 let log = require('loglevel');
 let server = require('mosca');
@@ -12,7 +11,6 @@ module.exports = {
         port: 1883,
         persistence: server.persistence.Memory
     },
-      // regulation configuration
 
     topic_hum: 'iot:h1',
     topic_ven: 'ventilation',
