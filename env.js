@@ -13,7 +13,7 @@ module.exports = {
     },
     
     // MQTT regulation
-    mqttoptions = {
+    mqttoptions: {
         port: 1883,
         clientId: 'Regulator'
     },
