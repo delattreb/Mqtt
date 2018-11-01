@@ -9,13 +9,13 @@ module.exports = {
 
     // Mosca Server configuration
     mosca: {
-        port: mqttport,
+        port: this.mqttport,
         persistence: server.persistence.Memory
     },
     
     // MQTT regulation
     mqttoptions: {
-        port: mqttport,
+        port: this.mqttport,
         clientId: 'Regulator'
     },
 
