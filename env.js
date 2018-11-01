@@ -11,6 +11,12 @@ module.exports = {
         port: 1883,
         persistence: server.persistence.Memory
     },
+    
+    // MQTT regulation
+    mqttoptions = {
+        port: 1883,
+        clientId: 'Regulator'
+    },
 
     topic_hum: 'iot:h1',
     topic_ven: 'ventilation',

@@ -10,15 +10,11 @@ let gap = 0
 let last_hum = 0
 let bthreshold = false
 let bventilation_force = false
-var options = {
-    port: 1883,
-    clientId: 'Regulator'
-}
 
 log.setDefaultLevel(env.loglevel)
 let connection
 
-let clientMqtt = mqtt.connect(credential.address, options)
+let clientMqtt = mqtt.connect(credential.address, env.mqttoptions)
 connection = mysql.createConnection(credential.db)
 
 //
