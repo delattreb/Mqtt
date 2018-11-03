@@ -23,8 +23,8 @@ refreshData()
 |
 /*-----------------------------------------------------------------------------------------------*/
 function refreshData() {
-    threshold = sql.getthreshold(env.location)
-    gap = sql.getgap(env.location)
+    sql.getthreshold(env.location, function (threshold) {})
+    sql.getgap(env.location, function (gap) {})
     logger.debug('Threshold: ' + threshold + ' Gap: ' + gap)
 }
 
