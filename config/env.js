@@ -5,7 +5,7 @@ module.exports = {
     loglevel: 1,
 
     // Mosca Server configuration
-    mosacacredentials: '/home/dietpi/MqttDeskLaserStation/credentials.json',
+    mosacacredentials: '/home/dietpi/MqttHome/credentials.json',
     mosca: {
         port: 1884,
         persistence: server.persistence.Memory,
