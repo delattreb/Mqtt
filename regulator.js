@@ -20,10 +20,12 @@ clientMqtt.on('message', (topic, message) => {
         if (topic.indexOf(env.topic_hum) === 0) {
             let hum = parseFloat(message.toString())
             last_hum = hum
-            logger.debug('Hum '+ hum, ' Thresold '+ threshold)
-            logger.debug('Topic '+ env.topic_hum, ' Humidity '+ hum)
+            logger.debug('Hum ' + hum, ' Thresold ' + threshold)
+            logger.debug('Topic ' + env.topic_hum, ' Humidity ' + hum)
             if (hum >= threshold) {
-                clientMqtt.publish(env.topic_ven, JSON.stringify({ value: '1' }))
+                clientMqtt.publish(env.topic_ven, JSON.stringify({
+                    value: '1'
+                }))
                 if (!bthreshold)
                     sql.AddRegulation('Regulation On', dateFormat(new Date(), env.mysql_date), env.ESP_NAME, true)
                 logger.info('Regulation On')
@@ -31,7 +33,9 @@ clientMqtt.on('message', (topic, message) => {
             } else {
                 if (bthreshold) {
                     if (hum <= (threshold - gap)) {
-                        clientMqtt.publish(env.topic_ven, JSON.stringify({ value: '0' }))
+                        clientMqtt.publish(env.topic_ven, JSON.stringify({
+                            value: '0'
+                        }))
                         sql.AddRegulation('Regulation Off', dateFormat(new Date(), env.mysql_date), env.ESP_NAME, false)
                         logger.info('Regulation Off')
                         bthreshold = false
@@ -43,13 +47,16 @@ clientMqtt.on('message', (topic, message) => {
     if (topic.indexOf(env.topic_ven_force) === 0) {
         let state = parseFloat(message.toString())
         if (state === 0) {
-            clientMqtt.publish(env.topic_ven, JSON.stringify({ value: '0' }))
+            clientMqtt.publish(env.topic_ven, JSON.stringify({
+                value: '0'
+            }))
             sql.AddRegulation('Regulation Off', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), env.ESP_NAME, false)
             logger.info('Regulation force Off')
             bventilation_force = false
-        }
-        else {
-            clientMqtt.publish(env.topic_ven, JSON.stringify({ value: '1' }))
+        } else {
+            clientMqtt.publish(env.topic_ven, JSON.stringify({
+                value: '1'
+            }))
             sql.AddRegulation('Regulation On', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), env.ESP_NAME, true)
             logger.info('Regulation force On')
             bventilation_force = true
