@@ -1,9 +1,8 @@
 let mqtt = require('mqtt')
-let mysql = require('mysql')
-let dateFormat = require('dateformat')
-let log = require('loglevel')
-let env = require('./env')
-let credential = require('./credentials')
+let env = require(`${rootPath}/config/env`)
+let credential = require(`${rootPath}/config/credentials`)
+let sql = require('./lib/sql')
+let logger = require('./lib/logger')
 
 let threshold = 100
 let gap = 0
@@ -11,67 +10,30 @@ let last_hum = 0
 let bthreshold = false
 let bventilation_force = false
 
-log.setDefaultLevel(env.loglevel)
-let connection
-
 let clientMqtt = mqtt.connect(credential.address, env.mqttoptions)
-connection = mysql.createConnection(credential.db)
+clientMqtt.subscribe(env.topic_hum)
+clientMqtt.subscribe(env.topic_ven_force)
 
-//
-// Connection
-//
-let promiseMqtt = new Promise(function (resolve, reject) {
-    clientMqtt.subscribe(env.topic_hum)
-    clientMqtt.subscribe(env.topic_ven_force)
-    clientMqtt.on('connect', function () {
-        log.info(dateFormat(new Date(), env.date_format), 'Connected to:', credential.address)
-        resolve()
-    })
-})
-
-let promiseMySQL = new Promise(function (resolve, reject) {
-    connection.connect(function () {
-        log.info(dateFormat(new Date(), env.date_format), 'Database Connected')
-        resolve()
-    })
-})
-
-Promise.all([promiseMqtt, promiseMySQL]).then(function (values) {
-    refreshData()
-}
-)
-
-// --------------------------------------------------------------------------------------------------------------------
-function refreshData() {
-    getthreshold()
-    getgap()
-    log.debug(dateFormat(new Date(), env.date_format), 'Threshold:', threshold)
-    log.debug(dateFormat(new Date(), env.date_format), 'Gap:', gap)
-}
-
-//
-// MQTT
-//
 clientMqtt.on('message', (topic, message) => {
     refreshData()
     if (bventilation_force === false) {
         if (topic.indexOf(env.topic_hum) === 0) {
             let hum = parseFloat(message.toString())
             last_hum = hum
-            log.debug(dateFormat(new Date(), env.date_format), 'Topic', env.topic_hum, 'Humidity', hum)
-            log.debug(dateFormat(new Date(), env.date_format), 'Hum', hum, 'Thresold', threshold)
+            logger.debug('Hum '+ hum, ' Thresold '+ threshold)
+            logger.debug('Topic '+ env.topic_hum, ' Humidity '+ hum)
             if (hum >= threshold) {
                 clientMqtt.publish(env.topic_ven, JSON.stringify({ value: '1' }))
                 if (!bthreshold)
-                    AddRegulation('Regulation On', dateFormat(new Date(), env.mysql_date), env.ESP_NAME, true)
-                log.info(dateFormat(new Date(), env.date_format), 'Regulation On')
+                    sql.AddRegulation('Regulation On', dateFormat(new Date(), env.mysql_date), env.ESP_NAME, true)
+                logger.info('Regulation On')
                 bthreshold = true
             } else {
                 if (bthreshold) {
                     if (hum <= (threshold - gap)) {
                         clientMqtt.publish(env.topic_ven, JSON.stringify({ value: '0' }))
-                        AddRegulation('Regulation Off', dateFormat(new Date(), env.mysql_date), env.ESP_NAME, false)
-                        log.info(dateFormat(new Date(), env.date_format), 'Regulation Off')
+                        sql.AddRegulation('Regulation Off', dateFormat(new Date(), env.mysql_date), env.ESP_NAME, false)
+                        logger.info('Regulation Off')
                         bthreshold = false
                     }
                 }
@@ -82,61 +44,15 @@ clientMqtt.on('message', (topic, message) => {
         let state = parseFloat(message.toString())
         if (state === 0) {
             clientMqtt.publish(env.topic_ven, JSON.stringify({ value: '0' }))
-            AddRegulation('Regulation Off', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), env.ESP_NAME, false)
-            log.info(dateFormat(new Date(), env.date_format), 'Regulation force Off')
+            sql.AddRegulation('Regulation Off', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), env.ESP_NAME, false)
+            logger.info('Regulation force Off')
             bventilation_force = false
         }
         else {
             clientMqtt.publish(env.topic_ven, JSON.stringify({ value: '1' }))
-            AddRegulation('Regulation On', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), env.ESP_NAME, true)
-            log.info(dateFormat(new Date(), env.date_format), 'Regulation force On')
+            sql.AddRegulation('Regulation On', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), env.ESP_NAME, true)
+            logger.info('Regulation force On')
             bventilation_force = true
         }
     }
 })
-//---------------------------------------------------------------------------------------------------------------------
-
-
-//
-// MySQL
-//
-function AddRegulation(tag, date, name, state) {
-    let reqsql = 'INSERT INTO regulation (tag, date, name, state) VALUES (?, ?, ?, ?)'
-    let params = [tag, date, name, state]
-    sql = mysql.format(reqsql, params)
-    connection.query(sql, function (error, results) {
-        if (error) {
-            log.error(dateFormat(new Date(), env.date_format), 'MySQL connection error')
-            throw error
-        }
-    })
-    log.info(name, 'Insert regulation', state)
-}
-
-function getthreshold() {
-    let reqsql = 'SELECT threshold FROM configuration WHERE name=? LIMIT 1'
-    let params = [env.location]
-    sql = mysql.format(reqsql, params)
-    connection.query(sql, function (error, results) {
-        if (error) {
-            log.error(dateFormat(new Date(), env.date_format), 'MySQL connection error')
-            throw error
-        }
-        threshold = parseFloat(results[0].threshold)
-    })
-}
-
-function getgap() {
-    let reqsql = 'SELECT gap FROM configuration WHERE name=? LIMIT 1'
-    let params = [env.location]
-    sql = mysql.format(reqsql, params)
-    connection.query(sql, function (error, results) {
-        if (error) {
-            log.error(dateFormat(new Date(), env.date_format), 'MySQL connection error')
-            throw error
-        }
-        gap = parseFloat(results[0].gap)
-    })
-}
-
-//--------------------------------------------------------------------------------------------------------------------
