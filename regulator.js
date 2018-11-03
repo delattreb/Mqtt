@@ -14,6 +14,24 @@ let clientMqtt = mqtt.connect(credential.address, env.mqttoptions)
 clientMqtt.subscribe(env.topic_hum)
 clientMqtt.subscribe(env.topic_ven_force)
 
+
+/*------------------------------------------------------------------------------------------------
+|  Function refreshData
+|  Purpose:  
+|
+/*-----------------------------------------------------------------------------------------------*/
+function refreshData() {
+    threshold = sql.getthreshold()
+    gap = sql.getgap()
+    logger.debug('Threshold: ' + threshold)
+    logger.debug('Gap :' + gap)
+}
+
+/*------------------------------------------------------------------------------------------------
+|  Function MQTT
+|  Purpose:  
+|
+/*-----------------------------------------------------------------------------------------------*/
 clientMqtt.on('message', (topic, message) => {
     refreshData()
     if (bventilation_force === false) {
