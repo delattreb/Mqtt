@@ -23,8 +23,8 @@ clientMqtt.subscribe(env.topic_ven_force)
 |
 /*-----------------------------------------------------------------------------------------------*/
 function refreshData() {
-    threshold = sql.getthreshold()
-    gap = sql.getgap()
+    threshold = sql.getthreshold(env.location)
+    gap = sql.getgap(env.location)
     logger.debug('Threshold: ' + threshold)
     logger.debug('Gap :' + gap)
 }
