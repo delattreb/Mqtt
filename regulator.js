@@ -15,7 +15,7 @@ let bventilation_force = false
 let clientMqtt = mqtt.connect(credential.address, env.mqttoptions)
 clientMqtt.subscribe(env.topic_hum)
 clientMqtt.subscribe(env.topic_ven_force)
-
+refreshData()
 
 /*------------------------------------------------------------------------------------------------
 |  Function refreshData
