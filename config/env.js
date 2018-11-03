@@ -7,7 +7,7 @@ module.exports = {
     // Mosca Server configuration
     mosacacredentials: '/home/dietpi/MqttHome/credentials.json',
     mosca: {
-        port: 1884,
+        port: 1883,
         persistence: server.persistence.Memory,
         logger: {
             name: 'MoscaServer',
@@ -22,7 +22,7 @@ module.exports = {
 
     // MQTT configuration
     mqttoptions: {
-        port: 1884,
+        port: 1883,
         clientId: 'Smartphone',
         username: "dietpi",
         password: "infected",
