@@ -23,9 +23,14 @@ refreshData()
 |
 /*-----------------------------------------------------------------------------------------------*/
 function refreshData() {
-    sql.getthreshold(env.location, function (threshold) {})
-    sql.getgap(env.location, function (gap) {})
-    logger.debug('Threshold: ' + threshold + ' Gap: ' + gap)
+    sql.getthreshold(env.location, function (valthreshold) {
+        threshold = valthreshold
+        logger.debug('Threshold ' + threshold)
+    })
+    sql.getgap(env.location, function (valgap) {
+        gap = valgap
+        logger.debug('Gap ' + gap)
+    })
 }
 
 /*------------------------------------------------------------------------------------------------
@@ -39,7 +44,7 @@ clientMqtt.on('message', (topic, message) => {
         if (topic.indexOf(env.topic_hum) === 0) {
             let hum = parseFloat(message.toString())
             last_hum = hum
-            logger.debug('Topic: ' + env.topic_hum + ' Humidity: ' + hum)
+            logger.debug('Topic ' + env.topic_hum + ' Humidity ' + hum)
             if (hum >= threshold) {
                 clientMqtt.publish(env.topic_ven, JSON.stringify({
                     value: '1'
