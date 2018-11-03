@@ -2,7 +2,7 @@ let server = require('mosca')
 
 module.exports = {
     // Log Level Configuration Trace:0 Debug:1 Info:2 Warning:3 Error:4 Silent:5
-    loglevel: 1,
+    loglevel: 0,
 
     // Mosca Server configuration
     mosacacredentials: '/home/dietpi/MqttHome/credentials.json',
