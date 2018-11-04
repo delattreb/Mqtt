@@ -1,6 +1,7 @@
 global.rootPath = __dirname
 
 let mqtt = require('mqtt')
+let dateFormat = require('dateformat')
 let env = require(`${rootPath}/config/env`)
 let credential = require(`${rootPath}/config/credentials`)
 let sql = require('./lib/sql')
