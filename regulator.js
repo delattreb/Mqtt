@@ -73,6 +73,7 @@ clientMqtt.on('message', (topic, message) => {
     }
     if (topic.indexOf(env.topic_ven_force) === 0) {
         let state = parseInt(message.toString())
+        logger.debug('State '+ state)
         if (state === 0) {
             clientMqtt.publish(env.topic_ven, JSON.stringify({
                 value: '0'
