@@ -14,7 +14,7 @@ let bthreshold = false
 let bventilation_force = false
 
 let clientMqtt = mqtt.connect(credential.address, env.mqttoptions)
-clientMqtt.on('connect', function() { 
+clientMqtt.on('connect', function () {
     logger.debug('MQTT connected on port ' + env.mqttoptions.port)
 })
 clientMqtt.subscribe(env.topic_hum)
@@ -43,6 +43,7 @@ function refreshData() {
 |
 /*-----------------------------------------------------------------------------------------------*/
 clientMqtt.on('message', (topic, message) => {
+    logger.debug('Message ' + message)
     refreshData()
     if (bventilation_force === false) {
         if (topic.indexOf(env.topic_hum) === 0) {
@@ -73,7 +74,7 @@ clientMqtt.on('message', (topic, message) => {
     }
     if (topic.indexOf(env.topic_ven_force) === 0) {
         let state = parseInt(message.toString())
-        logger.debug('State '+ state)
+        logger.debug('State ' + state)
         if (state === 0) {
             clientMqtt.publish(env.topic_ven, JSON.stringify({
                 value: '0'
