@@ -86,7 +86,7 @@ clientMqtt.on('message', (topic, message) => {
             }))
             sql.AddRegulation('Regulation On', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), env.ESP_NAME, true)
             logger.info('Regulation force On')
-            bventilation_force = true
+            //bventilation_force = true
         }
     }
 })
