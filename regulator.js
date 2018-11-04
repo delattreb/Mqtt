@@ -43,7 +43,7 @@ function refreshData() {
 |
 /*-----------------------------------------------------------------------------------------------*/
 clientMqtt.on('message', (topic, message) => {
-    logger.debug('Message ' + message)
+    logger.debug('Message ' + JSON.parse(message).value)
     refreshData()
     if (bventilation_force === false) {
         if (topic.indexOf(env.topic_hum) === 0) {
