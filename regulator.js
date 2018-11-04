@@ -79,14 +79,14 @@ clientMqtt.on('message', (topic, message) => {
             }))
             sql.AddRegulation('Regulation Off', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), env.ESP_NAME, false)
             logger.info('Regulation force Off')
-            //bventilation_force = false
+            bventilation_force = false
         } else {
             clientMqtt.publish(env.topic_ven, JSON.stringify({
                 value: '1'
             }))
             sql.AddRegulation('Regulation On', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), env.ESP_NAME, true)
             logger.info('Regulation force On')
-            //bventilation_force = true
+            bventilation_force = true
         }
     }
 })
