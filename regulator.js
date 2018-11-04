@@ -43,11 +43,10 @@ function refreshData() {
 |
 /*-----------------------------------------------------------------------------------------------*/
 clientMqtt.on('message', (topic, message) => {
-    logger.debug('Message ' + JSON.parse(message).value)
     refreshData()
     if (bventilation_force === false) {
         if (topic.indexOf(env.topic_hum) === 0) {
-            let hum = parseFloat(message.toString())
+            let hum = parseInt(JSON.parse(message).value)
             last_hum = hum
             logger.debug('Topic ' + env.topic_hum + ' Humidity ' + hum)
             if (hum >= threshold) {
@@ -73,8 +72,7 @@ clientMqtt.on('message', (topic, message) => {
         }
     }
     if (topic.indexOf(env.topic_ven_force) === 0) {
-        let state = parseInt(message.toString())
-        logger.debug('State ' + state)
+        let state = parseInt(JSON.parse(message).value)
         if (state === 0) {
             clientMqtt.publish(env.topic_ven, JSON.stringify({
                 value: '0'
