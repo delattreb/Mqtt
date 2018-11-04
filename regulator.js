@@ -72,14 +72,14 @@ clientMqtt.on('message', (topic, message) => {
         }
     }
     if (topic.indexOf(env.topic_ven_force) === 0) {
-        let state = parseFloat(message.toString())
+        let state = parseInt(message.toString())
         if (state === 0) {
             clientMqtt.publish(env.topic_ven, JSON.stringify({
                 value: '0'
             }))
             sql.AddRegulation('Regulation Off', dateFormat(new Date(), "yyyy-mm-dd H:MM:ss"), env.ESP_NAME, false)
             logger.info('Regulation force Off')
-            bventilation_force = false
+            //bventilation_force = false
         } else {
             clientMqtt.publish(env.topic_ven, JSON.stringify({
                 value: '1'
