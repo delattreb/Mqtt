@@ -24,16 +24,16 @@ module.exports = {
     mqttRegulatorOptions: {
         port: 1883,
         clientId: 'Regulator',
-        username: "dietpi",
-        password: "infected",
+        username: 'dietpi',
+        password: 'infected',
     },
 
     // MQTT configuration
     mqttTestOptions: {
         port: 1883,
         clientId: 'SmartPhone',
-        username: "dietpi",
-        password: "infected",
+        username: 'dietpi',
+        password: 'infected',
     },
 
     // API configuration
@@ -50,6 +50,6 @@ module.exports = {
     ESP_NAME: 'ESP Extracteur',
 
     // Date format
-    date_format: "dd/mm/yyyy H:MM:ss",
-    mysql_date: "yyyy-mm-dd H:MM:ss"
+    date_format: 'dd/mm/yyyy H:MM:ss',
+    mysql_date: 'yyyy-mm-dd H:MM:ss'
 }
