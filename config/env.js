@@ -43,7 +43,6 @@ module.exports = {
     },
 
     // Regulation configuration
-    topic_hum: 'iot:h1',
     topic_ven: 'ventilation',
     topic_iot: 'data',
     topic_ven_force: 'ventilation_force',

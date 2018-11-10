@@ -44,10 +44,10 @@ function refreshData() {
 clientMqtt.on('message', (topic, message) => {
     refreshData()
     if (bventilation_force === false) {
-        if (topic.indexOf(env.topic_hum) === 0) {
+        if (topic === env.topic_iot && JSON.parse(message).name === 'h4') {
             let hum = parseFloat(JSON.parse(message).value)
             last_hum = hum
-            logger.debug('Topic ' + env.topic_hum + ' Humidity ' + hum)
+            logger.debug('Topic ' + topic + ' Humidity ' + hum)
             if (hum >= threshold) {
                 clientMqtt.publish(env.topic_ven, JSON.stringify({
                     value: '1'
