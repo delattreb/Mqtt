@@ -21,9 +21,17 @@ module.exports = {
     },
 
     // MQTT configuration
-    mqttoptions: {
+    mqttRegulatorOptions: {
         port: 1883,
         clientId: 'Regulator',
+        username: "dietpi",
+        password: "infected",
+    },
+
+    // MQTT configuration
+    mqttTestOptions: {
+        port: 1883,
+        clientId: 'SmartPhone',
         username: "dietpi",
         password: "infected",
     },
