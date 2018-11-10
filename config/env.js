@@ -45,7 +45,7 @@ module.exports = {
     // Regulation configuration
     topic_hum: 'iot:h1',
     topic_ven: 'ventilation',
-    topic_iot: 'iot',
+    topic_iot: 'data',
     topic_ven_force: 'ventilation_force',
     location: 'Cave',
     ESP_NAME: 'ESP Extracteur',
