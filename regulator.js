@@ -16,7 +16,7 @@ let clientMqtt = mqtt.connect(credential.address, env.mqttRegulatorOptions)
 clientMqtt.on('connect', function () {
     logger.debug('MQTT connected on port ' + env.mqttRegulatorOptions.port)
 })
-clientMqtt.subscribe(env.topic_hum)
+clientMqtt.subscribe(env.topic_iot)
 clientMqtt.subscribe(env.topic_ven_force)
 refreshData()
 
@@ -70,7 +70,7 @@ clientMqtt.on('message', (topic, message) => {
             }
         }
     }
-    if (topic.indexOf(env.topic_ven_force) === 0) {
+    if (topic === env.topic_ven_force) {
         let state = parseInt(JSON.parse(message).value)
         if (state === 0) {
             clientMqtt.publish(env.topic_ven, JSON.stringify({
