@@ -47,19 +47,16 @@ clientMqtt.on('message', (topic, message) => {
             last_hum = hum
             logger.debug('Topic ' + topic + ' Humidity ' + hum)
             if (hum >= threshold) {
-                clientMqtt.publish(env.topic_ven, JSON.stringify({
-                    value: '1'
-                }))
-                if (!bthreshold)
+                if (!bthreshold) {
+                    clientMqtt.publish(env.topic_ven, JSON.stringify({ value: '1' }))
                     api.insertRegulation(env.ESP_NAME, 'Regulation On', true)
-                logger.info('Regulation On')
+                    logger.info('Regulation On')
+                }
                 bthreshold = true
             } else {
                 if (bthreshold) {
                     if (hum <= (threshold - gap)) {
-                        clientMqtt.publish(env.topic_ven, JSON.stringify({
-                            value: '0'
-                        }))
+                        clientMqtt.publish(env.topic_ven, JSON.stringify({ value: '0' }))
                         api.insertRegulation(env.ESP_NAME, 'Regulation Off', false)
                         logger.info('Regulation Off')
                         bthreshold = false
@@ -71,16 +68,12 @@ clientMqtt.on('message', (topic, message) => {
     if (topic === env.topic_ven_force) {
         let state = parseInt(JSON.parse(message).value)
         if (state === 0) {
-            clientMqtt.publish(env.topic_ven, JSON.stringify({
-                value: '0'
-            }))
+            clientMqtt.publish(env.topic_ven, JSON.stringify({ value: '0' }))
             api.insertRegulation(env.ESP_NAME, 'Regulation Off', false)
             logger.info('Regulation force Off')
             bventilation_force = false
         } else {
-            clientMqtt.publish(env.topic_ven, JSON.stringify({
-                value: '1'
-            }))
+            clientMqtt.publish(env.topic_ven, JSON.stringify({ value: '1' }))
             api.insertRegulation(env.ESP_NAME, 'Regulation On', true)
             logger.info('Regulation force On')
             bventilation_force = true
