@@ -28,11 +28,9 @@ refreshData()
 function refreshData() {
     api.getThreshold(function (valthreshold) {
         threshold = valthreshold
-        logger.debug('Threshold ' + threshold)
     })
     api.getGap(function (valgap) {
         gap = valgap
-        logger.debug('Gap ' + gap)
     })
 }
 
