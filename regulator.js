@@ -45,7 +45,7 @@ clientMqtt.on('message', (topic, message) => {
         if (topic === env.topic_iot && JSON.parse(message).name === 'h4') {
             let hum = parseFloat(JSON.parse(message).value)
             last_hum = hum
-            logger.debug('Topic ' + topic + ' Humidity ' + hum)
+            logger.debug('Topic ' + topic + ' ' + JSON.parse(message).name + ' Humidity ' + hum)
             if (hum >= threshold) {
                 if (!bthreshold) {
                     clientMqtt.publish(env.topic_ven, JSON.stringify({ value: '1' }))
