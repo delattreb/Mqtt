@@ -28,6 +28,12 @@ module.exports = {
         password: "infected",
     },
 
+    // API configuration
+    api: {
+        url: '127.0.0.1',
+        port: 1337
+    },
+
     // Regulation configuration
     topic_hum: 'iot:h1',
     topic_ven: 'ventilation',
