@@ -46,7 +46,6 @@ module.exports = {
     topic_ven: 'ventilation',
     topic_iot: 'data',
     topic_ven_force: 'ventilation_force',
-    location: 'Cave',
     ESP_NAME: 'ESP Extracteur',
 
     // Date format

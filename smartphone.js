@@ -1,4 +1,5 @@
 global.rootPath = __dirname
+
 let mqtt = require('mqtt')
 let credential = require(`${rootPath}/config/credentials`)
 let env = require(`${rootPath}/config/env`)
