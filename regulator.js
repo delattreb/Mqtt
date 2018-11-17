@@ -2,7 +2,7 @@ global.rootPath = __dirname
 
 let mqtt = require('mqtt')
 let env = require(`${rootPath}/config/env`)
-let credential = require(`${rootPath}/config/credentials`)
+
 let api = require('./lib/api')
 let logger = require('./lib/logger')
 
@@ -12,7 +12,7 @@ let last_hum = 0
 let bthreshold = false
 let bventilation_force = false
 
-let clientMqtt = mqtt.connect(credential.address, env.mqttRegulatorOptions)
+let clientMqtt = mqtt.connect(env.raspberry_address, env.mqttRegulatorOptions)
 clientMqtt.on('connect', function () {
     logger.debug('MQTT connected on port ' + env.mqttRegulatorOptions.port)
 })
