@@ -14,7 +14,7 @@ let bventilation_force = false
 
 let clientMqtt = mqtt.connect(env.raspberry_address, env.mqttRegulatorOptions)
 clientMqtt.on('connect', function () {
-    logger.debug('MQTT connected on port ' + env.mqttRegulatorOptions.port)
+    logger.info('MQTT connected on port ' + env.mqttRegulatorOptions.port)
 })
 clientMqtt.subscribe(env.topic_iot)
 clientMqtt.subscribe(env.topic_ven_force)
