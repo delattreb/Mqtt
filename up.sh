@@ -2,7 +2,7 @@
 echo "Stop services"
 forever stop server.js
 forever stop regulator.js
-forever stop app.js
+forever stop /home/dietpi/APIMQTT/app.js
 
 echo "Start API services"
 NODE_ENV=production forever start -e err_api.log /home/dietpi/APIMQTT/app.js
