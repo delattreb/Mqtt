@@ -7,7 +7,7 @@ module.exports = {
     // Mosca Server configuration
     mosacacredentials: '/home/dietpi/MqttHome/credentials.json',
     mosca: {
-        port: 1883,
+        port: 1885,
         persistence: server.persistence.Memory,
         logger: {
             name: 'MoscaServer',
@@ -21,21 +21,34 @@ module.exports = {
     },
 
     // MQTT configuration
-    mqttoptions: {
-        port: 1883,
+    mqttRegulatorOptions: {
+        port: 1885,
         clientId: 'Regulator',
-        username: "dietpi",
-        password: "infected",
+        username: 'dietpi',
+        password: 'infected',
+    },
+
+    // MQTT configuration
+    mqttTestOptions: {
+        port: 1885,
+        clientId: 'SmartPhone',
+        username: 'dietpi',
+        password: 'infected',
+    },
+
+    // API configuration
+    api: {
+        url: '127.0.0.1',
+        port: 1335
     },
 
     // Regulation configuration
-    topic_hum: 'iot:h1',
     topic_ven: 'ventilation',
+    topic_iot: 'data',
     topic_ven_force: 'ventilation_force',
-    location: 'Cave',
     ESP_NAME: 'ESP Extracteur',
 
     // Date format
-    date_format: "dd/mm/yyyy H:MM:ss",
-    mysql_date: "yyyy-mm-dd H:MM:ss"
+    date_format: 'dd/mm/yyyy H:MM:ss',
+    mysql_date: 'yyyy-mm-dd H:MM:ss'
 }
