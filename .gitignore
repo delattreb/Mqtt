@@ -6,3 +6,4 @@ regulator_err.log
 server.log
 server_err.log
 /config/credentials.js
+credentials.json
