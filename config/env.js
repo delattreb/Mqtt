@@ -2,12 +2,12 @@ let server = require('mosca')
 
 module.exports = {
     // Log Level Configuration Trace:0 Debug:1 Info:2 Warning:3 Error:4 Silent:5
-    loglevel: 2,
+    loglevel: 1,
 
     // Mosca Server configuration
     mosacacredentials: '/home/dietpi/Mqtt/credentials.json',
     mosca: {
-        port: 1883,
+        port: 1884,
         persistence: server.persistence.Memory,
         logger: {
             name: 'MoscaServer',
@@ -22,7 +22,7 @@ module.exports = {
 
     // MQTT configuration
     mqttRegulatorOptions: {
-        port: 1883,
+        port: 1884,
         clientId: 'Regulator',
         username: 'dietpi',
         password: 'infected',
@@ -30,7 +30,7 @@ module.exports = {
 
     // MQTT configuration
     mqttTestOptions: {
-        port: 1883,
+        port: 1884,
         clientId: 'SmartPhone',
         username: 'dietpi',
         password: 'infected',
@@ -39,10 +39,10 @@ module.exports = {
     // API configuration
     api: {
         url: '127.0.0.1',
-        port: 1337
+        port: 1338
     },
 
-    raspberry_address: 'mqtt://192.169.1.46',
+    raspberry_address: 'mqtt://192.169.1.47',
 
     // Regulation configuration
     topic_ven: 'ventilation',
